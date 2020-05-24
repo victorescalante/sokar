@@ -8,7 +8,7 @@
           </div>
           <div class="form_login">
             <el-form label-position="top" label-width="100px" :model="form">
-              <el-form-item label="Correo electronico">
+              <el-form-item label="Correo electrónico">
                 <el-input v-model="form.email"></el-input>
               </el-form-item>
               <el-form-item label="Contraseña">
@@ -43,7 +43,7 @@ export default {
         let response = await this.$auth.loginWith('local', { data: this.form })
         console.log(response)
       } catch (err) {
-        console.log(err)
+        this.$message('Credenciales de acceso incorrectas');
       }
     }
   }

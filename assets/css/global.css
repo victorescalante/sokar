@@ -1,0 +1,23 @@
+/*
+Styles for title
+ */
+
+.group-title .TitleSection{}
+
+.group-title .buttons-section{
+  padding: 25px;
+  text-align: right;
+}
+
+
+/*
+FORMS
+ */
+
+.form-style-curds .el-form-item{
+  padding: 0px 15px;
+}
+
+.content-space{
+  padding: 15px;
+}

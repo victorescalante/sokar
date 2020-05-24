@@ -8,7 +8,9 @@
       <el-col :md="20" class="col-content">
         <NavTop></NavTop>
         <div class="content-layout">
-          <nuxt />
+          <div class="real-content">
+            <nuxt />
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -58,12 +60,14 @@ html {
   }
 
   .content-layout{
-    background: white;
     padding: 15px;
+    min-height: calc(100vh - 61px);
+    background: rgba(223,234,245,.4);
   }
 
-  .col-content{
-
+  .real-content{
+    background: white;
+    padding: 15px;
   }
 
   .el-menu--horizontal > .el-submenu{
@@ -73,5 +77,9 @@ html {
   a{
     color: inherit;
     text-decoration: inherit;
+  }
+
+  .el-menu{
+    border-right: none;
   }
 </style>

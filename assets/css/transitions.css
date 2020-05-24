@@ -1,0 +1,22 @@
+.default-enter {
+}
+.default-enter-active {
+}
+.default-enter-to {
+}
+.default-leave {
+}
+.default-leave-active {
+}
+.default-leave-to {
+}
+.page-enter-active,
+.page-leave-active {
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+  transition-duration: 500ms;
+}
+.page-enter,
+.page-leave-to {
+  opacity: 0;
+}

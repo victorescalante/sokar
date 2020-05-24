@@ -8,7 +8,7 @@
         active-text-color="rgb(0,122,200)"
       >
         <el-submenu index="1">
-          <template slot="title">{{ $auth.state.user.name }}</template>
+          <template slot="title">Hola, {{ $auth.$state.user.name }}</template>
           <el-menu-item index="2-2">Configuración</el-menu-item>
           <el-menu-item index="2-3" @click="$auth.logout()">Salir</el-menu-item>
         </el-submenu>
