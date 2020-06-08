@@ -1,6 +1,6 @@
 <template>
     <div class="TitleSection">
-      <h1>{{ title }}</h1>
+      <h2>{{ title }}</h2>
     </div>
 </template>
 
@@ -12,7 +12,8 @@
 
 <style>
   .TitleSection{
-    color: #465bff;
+    color: #409EFF;
     padding: 25px 0px;
+    text-transform: uppercase;
   }
 </style>

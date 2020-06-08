@@ -3,7 +3,7 @@
       <el-menu
         class="el-menu-demo"
         mode="horizontal"
-        background-color="rgb(0,122,192)"
+        background-color="rgb(7,103,198)"
         text-color="#fff"
         active-text-color="rgb(0,122,200)"
       >
@@ -15,6 +15,10 @@
       </el-menu>
     </div>
 </template>
+
+<style lang="scss">
+  @import "Navtop";
+</style>
 
 <script>
     export default {

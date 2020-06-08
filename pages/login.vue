@@ -4,18 +4,20 @@
       <el-col class="login-container-col">
         <el-card class="box-card">
           <div class="container-logo">
-            <img class="logo" src="~/assets/diken_logo.png" alt="Diken logo">
+            <img class="logo" src="~/assets/images/diken_logo.png" alt="Diken logo">
           </div>
           <div class="form_login">
             <el-form label-position="top" label-width="100px" :model="form">
-              <el-form-item label="Correo electrónico">
-                <el-input v-model="form.email"></el-input>
+              <el-form-item label="Usuario">
+                <el-input placeholder="Ingresa tu correo" v-model="form.email"></el-input>
               </el-form-item>
               <el-form-item label="Contraseña">
-                <el-input type="password" v-model="form.password"></el-input>
+                <el-input placeholder="Ingresa tu password" type="password" v-model="form.password"></el-input>
               </el-form-item>
               <div class="login-button">
-                <el-button @click="login" type="primary">Acceder al sistema</el-button>
+                <el-button @click="login" type="primary">Iniciar sesión</el-button>
+                <br><br><br>
+                <a href="#" style="color: #1989FA">¿Olvidaste tu password?</a>
               </div>
             </el-form>
           </div>
@@ -52,6 +54,10 @@ export default {
 
 <style>
 
+  .el-form-item__label{
+    line-height: 15px;
+  }
+
   @keyframes gradient {
     0% {
       background-position: 0% 50%;
@@ -66,15 +72,29 @@ export default {
 
   .box-card{
     border-radius: 15px;
+    padding: 20px 0px;
+    background: white;
+    z-index: 5;
   }
 
   .container{
     position: relative;
     width: 100%;
     height: 100vh;
+    background-image: url("~assets/images/login_bg.png");
+    background-size: cover;
+  }
+
+  .container::before{
+    content: "";
+    position: absolute;
     background: linear-gradient(-45deg, #ee7752, #5d3ce7, #23a6d5, #23d5ab);
-    background-size: 400% 400%;
     animation: gradient 15s ease infinite;
+    background-size: 400% 400%;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.4;
   }
 
   .container-logo{
@@ -87,7 +107,7 @@ export default {
 
   .login-button{
     padding: 15px 0px;
-    text-align: right;
+    text-align: center;
   }
 
   .login-container-row{
@@ -95,11 +115,16 @@ export default {
   }
 
   .login-container-col{
-    width: 450px;
+    z-index: 10;
+    background: linear-gradient(-45deg, #ee7752, #5d3ce7, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    padding: 20px;
+    width: 400px;
     position: absolute;
     left: 50%;
     margin-left: -225px;
-    top: 50%;
+    top: 40%;
     margin-top: -225px;
   }
 

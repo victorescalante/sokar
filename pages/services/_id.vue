@@ -8,7 +8,7 @@
 
     <el-row class="group-title">
       <el-col :md="12">
-        <TitleSection title="Actualizar usuario"></TitleSection>
+        <TitleSection title="Actualizar Cliente"></TitleSection>
       </el-col>
     </el-row>
 
@@ -45,16 +45,8 @@
           </el-form-item>
         </el-col>
         <el-col :md="6">
-          <el-form-item label="Contraseña" prop="password">
+          <el-form-item label="Nueva Contraseña" prop="password">
             <el-input type="password" v-model="form.password"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="6">
-          <el-form-item label="Rol" prop="role">
-            <el-select v-model="form.role" placeholder="Selecciona un rol">
-              <el-option label="Asesor" value="asesor"></el-option>
-              <el-option label="Tecnico" value="tecnico"></el-option>
-            </el-select>
           </el-form-item>
         </el-col>
         <el-col :md="24">
@@ -94,13 +86,12 @@
           second_last_name: '',
           email: '',
           password: '',
-          role: ''
+          role: 'cliente'
         },
         rules: {
           name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],
           last_name: [{required: true, message: 'Agrega apellido', trigger: 'blur'}],
-          email: [{required: true, message: 'Agrega un correo', trigger: 'blur'}],
-          role: [{required: true, message: 'Agrega un rol', trigger: 'blur'}],
+          email: [{required: true, message: 'Agrega un correo', trigger: 'blur'}]
         }
       }
     },
@@ -108,7 +99,9 @@
       submitForm(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            delete this.form.password;
+            if (this.form.password.length <= 1){
+              delete this.form.password;
+            }
             this.$axios.patch(process.env.URL_RA_BACKEND+'users/'+this.$route.params.id, this.form)
               .then(response => {
                 this.$notify({

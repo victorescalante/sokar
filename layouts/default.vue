@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div class="navbar-login">
+      <div class="navbar-image">
+        <img class="logo" src="~/assets/images/30diken.png" alt="Diken logo">
+      </div>
+      <div class="navbar-text">SISTEMA ADMINISTRATIVO DE EQUIPOS Y MANTENIMIENTOS</div>
+    </div>
     <nuxt />
   </div>
 </template>
@@ -23,4 +29,40 @@ html {
   box-sizing: border-box;
   margin: 0;
 }
+
+  .navbar-login{
+    background: #0767C6 0% 0% no-repeat padding-box;
+    height: 50px;
+    width: 100%;
+    position: absolute;
+    z-index: 10;
+  }
+
+  .navbar-login > div{
+    display: inline-block;
+  }
+
+  .navbar-image{
+    height: 50px;
+    background: white;
+    width: 150px;
+    position: relative;
+    border-radius: 0px 0px 100px 0px;
+  }
+
+  .navbar-image img{
+    position: absolute;
+    width: 70px;
+    top: 0px;
+    left: 35px;
+  }
+
+  .navbar-text{
+    position: absolute;
+    max-width: 100%;
+    top: 50%;
+    margin-top: -10px;
+    left: 200px;
+    color: white;
+  }
 </style>

@@ -48,12 +48,16 @@ export default {
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
-    '@nuxtjs/auth'
+    '@nuxtjs/auth',
+    '@nuxtjs/style-resources'
   ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
+  styleResources: {
+    scss: ['./assets/scss/*.scss']
+  },
   axios: {
   },
 
@@ -62,7 +66,7 @@ export default {
       login: '/login',
       logout: '/login',
       callback: '/login',
-      home: '/admin'
+      home: '/home'
     },
     cookie: {
       prefix: 'auth.',

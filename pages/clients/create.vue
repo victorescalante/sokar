@@ -2,20 +2,20 @@
   <div>
 
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/users' }">Usuarios</el-breadcrumb-item>
-      <el-breadcrumb-item>Creación de usuario</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/clients' }">Clientes</el-breadcrumb-item>
+      <el-breadcrumb-item>Creación de cliente</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-row class="group-title">
       <el-col :md="12">
-        <TitleSection title="Crear usuario"></TitleSection>
+        <TitleSection title="Crear cliente"></TitleSection>
       </el-col>
     </el-row>
 
     <el-row>
       <el-col :md="24">
         <div class="content-space">
-          <p>Información personal del usuario</p>
+          <p>Información personal del cliente</p>
         </div>
       </el-col>
       <el-form ref="formUser" :rules="rules" :model="form" class="form-style-curds">
@@ -36,7 +36,7 @@
         </el-col>
         <el-col :md="24">
           <div class="content-space">
-            <p>Datos de acceso a la plataforma</p>
+            <p>Datos de acceso a la plataforma para el cliente</p>
           </div>
         </el-col>
         <el-col :md="6">
@@ -49,18 +49,9 @@
             <el-input type="password" v-model="form.password"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :md="6">
-          <el-form-item label="Rol" prop="role">
-            <el-select v-model="form.role" placeholder="Selecciona un rol">
-              <el-option label="Asesor" value="asesor"></el-option>
-              <el-option label="Tecnico" value="tecnico"></el-option>
-              <el-option label="Cliente" value="cliente"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
         <el-col :md="24">
           <div class="content-space">
-            <el-button type="primary" @click="submitForm('formUser')">Crear usuario</el-button>
+            <el-button type="primary" @click="submitForm('formUser')">Crear cliente</el-button>
           </div>
         </el-col>
       </el-form>
@@ -98,14 +89,14 @@
               .then(response => {
                 this.$notify({
                   title: 'Success',
-                  message: 'El usuario fue creado correctamente',
+                  message: 'El cliente fue creado correctamente',
                   type: 'success'
                 });
-                this.$router.push('/users');
+                this.$router.push('/clients');
               }).catch(function (error) {
               this.$notify.error({
                 title: 'Error',
-                message: 'El usuario no ha posido ser creado'
+                message: 'El cliente no ha posido ser creado'
               });
             });
 
@@ -123,14 +114,13 @@
           second_last_name: '',
           email: '',
           password: '',
-          role: ''
+          role: 'cliente'
         },
         rules: {
           name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],
           last_name: [{required: true, message: 'Agrega apellido', trigger: 'blur'}],
           email: [{required: true, message: 'Agrega un correo', trigger: 'blur'}],
-          password: [{required: true, message: 'Agrega una contraseña', trigger: 'blur'}],
-          role: [{required: true, message: 'Agrega un rol', trigger: 'blur'}],
+          password: [{required: true, message: 'Agrega una contraseña', trigger: 'blur'}]
         }
       }
     }

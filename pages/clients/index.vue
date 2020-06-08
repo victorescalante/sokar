@@ -1,39 +1,62 @@
 <template>
   <div>
-
-    <TableGeneral title="Administración de usuarios">
+    <TableGeneral title="Administración de clientes">
 
       <div class="actions">
-        <el-button class="el-button--primary" icon="el-icon-plus" @click="dialogCreateUser = true">Crear usuario</el-button>
+        <el-button class="el-button--primary" icon="el-icon-plus" @click="dialogCreateClient = true">Crear cliente</el-button>
       </div>
 
       <div class="content">
-        <el-tabs v-model="activeName">
-          <el-tab-pane label="Todos" name="all">
-            <TableUsers :data="myTable()"></TableUsers>
-          </el-tab-pane>
-          <el-tab-pane label="Técnicos" name="tecnico">
-            <TableUsers :data="myTable('tecnico')"></TableUsers>
-          </el-tab-pane>
-          <el-tab-pane label="Asesores" name="asesor">
-            <TableUsers :data="myTable('asesor')"></TableUsers>
-          </el-tab-pane>
-          <el-tab-pane label="Administradores" name="admin">
-            <TableUsers :data="myTable('admin')"></TableUsers>
-          </el-tab-pane>
-        </el-tabs>
+        <el-table
+          :data="data"
+          stripe
+          style="width: 100%">
+          <el-table-column
+            prop="name"
+            label="Nombre">
+          </el-table-column>
+          <el-table-column
+            prop="last_name"
+            label="Apellido">
+          </el-table-column>
+          <el-table-column
+            prop="email"
+            label="Correo electrónico">
+          </el-table-column>
+          <el-table-column
+            prop="role"
+            label="Rol">
+          </el-table-column>
+          <el-table-column
+            prop="created_at"
+            label="Creado">
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="Operaciones">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="handleEdit(scope.$index, scope.row)">Editar</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
-
     </TableGeneral>
 
 
     <!-- Dialogs -->
     <el-dialog
-      title="Agregar usuario"
-      :visible.sync="dialogCreateUser"
+      title="Agregar cliente"
+      :visible.sync="dialogCreateClient"
       width="50%">
 
       <el-row>
+        <el-col :md="24">
+          <div class="content-space">
+            <p>Información personal del cliente</p>
+          </div>
+        </el-col>
         <el-form ref="formUser" :rules="rules" :model="form" class="form-style-curds">
           <el-col :md="8">
             <el-form-item label="Nombre completo" prop="name">
@@ -52,7 +75,7 @@
           </el-col>
           <el-col :md="24">
             <div class="content-space">
-              <p>Datos de acceso a la plataforma</p>
+              <p>Datos de acceso a la plataforma para el cliente</p>
             </div>
           </el-col>
           <el-col :md="8">
@@ -65,46 +88,22 @@
               <el-input type="password" v-model="form.password"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :md="8">
-            <el-form-item label="Rol de usuario" prop="role">
-              <el-select v-model="form.role" placeholder="Selecciona un rol">
-                <el-option label="Asesor" value="asesor"></el-option>
-                <el-option label="Tecnico" value="tecnico"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
         </el-form>
       </el-row>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogCreateUser = false">Cancel</el-button>
-        <el-button type="primary" @click="submitForm('formUser')">Crear usuario</el-button>
+        <el-button @click="dialogCreateClient = false">Cancel</el-button>
+        <el-button type="primary" @click="submitForm('formUser')">Crear cliente</el-button>
       </span>
     </el-dialog>
 
     <!-- End Dialogs -->
 
+
   </div>
 </template>
 
-<style lang="scss">
-
-  .el-dialog__header::after{
-    content: "";
-    width: 90%;
-    position: absolute;
-    top: 60px;
-    left: 5%;
-    padding: 0px 10px;
-    border-bottom: solid 1px $blue;
-  }
-
-</style>
-
 <script>
-
-  import _ from 'lodash';
-  import TableUsers from "../../components/users/TableUsers/TableUsers";
   import TableGeneral from "../../components/tables/TableGeneral";
 
   export default {
@@ -115,46 +114,40 @@
       mode: 'out-in'
     },
     components:{
-      TableUsers: TableUsers,
       TableGeneral: TableGeneral
     },
     head () {
       return {
-        title: 'Administración de usuarios',
+        title: 'Administración de clientes',
       }
     },
     data(){
       return {
         data: [],
-        activeName: 'all',
-        dialogCreateUser: false,
+        dialogCreateClient: false,
         form: {
           name: '',
           last_name: '',
           second_last_name: '',
           email: '',
           password: '',
-          role: ''
+          role: 'cliente'
         },
         rules: {
           name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],
           last_name: [{required: true, message: 'Agrega apellido', trigger: 'blur'}],
           email: [{required: true, message: 'Agrega un correo', trigger: 'blur'}],
-          password: [{required: true, message: 'Agrega una contraseña', trigger: 'blur'}],
-          role: [{required: true, message: 'Agrega un rol', trigger: 'blur'}],
+          password: [{required: true, message: 'Agrega una contraseña', trigger: 'blur'}]
         }
       }
     },
     methods: {
       async init() {
-        let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'users');
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'clients');
         this.data = data.data.users;
       },
-      myTable(role){
-        if (role){
-          return _.filter(this.data, {'role': role });
-        }
-        return this.data;
+      handleEdit(index, row){
+        this.$router.push('/clients/'+row.id);
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
@@ -167,15 +160,15 @@
                 this.data.push(response.data.data.user);
                 this.$notify({
                   title: 'Success',
-                  message: 'El usuario fue creado correctamente',
+                  message: 'El cliente fue creado correctamente',
                   type: 'success'
                 });
-                this.dialogCreateUser = false;
+                this.dialogCreateClient = false;
                 this.resetForm('formUser');
               }).catch(function (error) {
               this.$notify.error({
                 title: 'Error',
-                message: 'El usuario no ha posido ser creado'
+                message: 'El cliente no ha posido ser creado'
               });
             });
 

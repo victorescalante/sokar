@@ -1,11 +1,22 @@
 <template>
   <div>
     <el-row class="tac">
-      <el-col :sm="6" :md="4">
-        <div class="logo-diken-imge"><img src="~/assets/diken_logo.png" alt="Diken"></div>
+      <el-col :sm="6" :md="4" :lg="3">
+        <div class="logo-diken-imge">
+          <img src="~/assets/images/diken_logo.png" alt="Diken">
+        </div>
+        <div class="profile-nav">
+          <el-avatar
+            :size="100"
+            src="http://cdn.lowgif.com/full/14cd924518aed580-gif-avatar-11-gif-images-download.gif">
+          </el-avatar>
+          <p class="role">{{ $auth.$state.user.role }}</p>
+          <p class="name">{{ $auth.$state.user.name }}</p>
+          <div class="division_profile"></div>
+        </div>
         <NavBar></NavBar>
       </el-col>
-      <el-col :md="20" class="col-content">
+      <el-col :md="20" :lg="21" class="col-content">
         <NavTop></NavTop>
         <div class="content-layout">
           <div class="real-content">
@@ -32,7 +43,7 @@
 </script>
 
 
-<style>
+<style lang="scss">
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -54,10 +65,14 @@ html {
 
   .logo-diken-imge{
     text-align: center;
+    height: 60px;
+
+    img{
+      width: 70px;
+    }
+
   }
-  .logo-diken-imge img{
-    width: 100px;
-  }
+
 
   .content-layout{
     padding: 15px;
@@ -67,7 +82,6 @@ html {
 
   .real-content{
     background: white;
-    padding: 15px;
   }
 
   .el-menu--horizontal > .el-submenu{
@@ -81,5 +95,27 @@ html {
 
   .el-menu{
     border-right: none;
+  }
+
+  .profile-nav{
+    padding: 15px;
+    text-align: center;
+    .role{
+      padding: 15px 0px;
+      text-transform: uppercase;
+      font-weight: bold;
+      color: $blue;
+    }
+    .name{
+      text-transform: uppercase;
+      font-size: 15px;
+    }
+    .division_profile{
+      margin-top: 15px;
+      padding: 0px 15px;
+      width: 100%;
+      height: 1px;
+      background: $blue;
+    }
   }
 </style>

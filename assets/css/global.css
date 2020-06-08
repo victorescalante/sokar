@@ -21,3 +21,12 @@ FORMS
 .content-space{
   padding: 15px;
 }
+
+
+/**
+Override
+ */
+
+.primary-color{
+  color: rgba(25, 137, 250, 1);
+}
