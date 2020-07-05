@@ -1,67 +1,89 @@
 <template>
   <div>
+    <TableGeneral title="Mantenimientos">
 
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/clients' }">Clientes</el-breadcrumb-item>
-      <el-breadcrumb-item>Creación de cliente</el-breadcrumb-item>
-    </el-breadcrumb>
+      <el-row>
+        <el-col :md="18" style="padding: 15px">
+          <el-card>
+            <el-row>
+              <el-col :md="24">
+                <h3>Registro</h3>
+                <br>
+                <hr>
+              </el-col>
+              <el-col :md="24">
+                <div class="content-space">
+                  <p>Información de registro</p>
+                </div>
+              </el-col>
+              <el-form ref="formService" :rules="rules" :model="form" class="form-style-curds">
+                <el-col :md="8">
+                  <el-form-item label="Nombre del Cliente" prop="name">
+                    <el-select v-model="form.region" placeholder="Selecciona un cliente">
+                      <el-option label="Zone one" value="shanghai"></el-option>
+                      <el-option label="Zone two" value="beijing"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :md="8">
+                  <el-form-item label="Nombre del Técnico" prop="last_name">
+                    <el-select v-model="form.region" placeholder="Selecciona un técnico">
+                      <el-option label="Zone one" value="shanghai"></el-option>
+                      <el-option label="Zone two" value="beijing"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :md="8">
+                  <el-form-item label="Equipo" prop="last_name">
+                    <el-select v-model="form.region" placeholder="Selecciona un equipo">
+                      <el-option label="Zone one" value="shanghai"></el-option>
+                      <el-option label="Zone two" value="beijing"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :md="8">
+                  <el-form-item label="Tipo de mantenimiento" prop="last_name">
+                    <el-select v-model="form.region" placeholder="Selecciona un tipo de mantenimiento">
+                      <el-option label="Zone one" value="shanghai"></el-option>
+                      <el-option label="Zone two" value="beijing"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :md="8">
+                  <el-form-item label="Fecha de mantenimiento">
+                    <el-date-picker type="date" placeholder="Pick a date" v-model="form.date1" style="width: 100%;"></el-date-picker>
+                  </el-form-item>
+                </el-col>
+                <el-col :md="8">
+                  <el-form-item label="Fecha de mantenimiento (termino)">
+                    <el-date-picker type="date" placeholder="Pick a date" v-model="form.date1" style="width: 100%;"></el-date-picker>
+                  </el-form-item>
+                </el-col>
+                <el-col :md="24">
+                  <el-form-item label="Descripción de actividad">
+                    <el-input type="textarea" col  v-model="form.desc"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-form>
+            </el-row>
+          </el-card>
+        </el-col>
+        <el-col :md="6"></el-col>
+      </el-row>
 
-    <el-row class="group-title">
-      <el-col :md="12">
-        <TitleSection title="Crear cliente"></TitleSection>
-      </el-col>
-    </el-row>
-
-    <el-row>
-      <el-col :md="24">
-        <div class="content-space">
-          <p>Información personal del cliente</p>
-        </div>
-      </el-col>
-      <el-form ref="formUser" :rules="rules" :model="form" class="form-style-curds">
-        <el-col :md="6">
-          <el-form-item label="Nombre completo" prop="name">
-            <el-input v-model="form.name" required></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="6">
-          <el-form-item label="Apellido Paterno" prop="last_name">
-            <el-input v-model="form.last_name"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="6">
-          <el-form-item label="Apellido Materno" prop="second_last_name">
-            <el-input v-model="form.second_last_name"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="24">
-          <div class="content-space">
-            <p>Datos de acceso a la plataforma para el cliente</p>
-          </div>
-        </el-col>
-        <el-col :md="6">
-          <el-form-item label="Correo electrónico" prop="email">
-            <el-input v-model="form.email"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="6">
-          <el-form-item label="Contraseña" prop="password">
-            <el-input type="password" v-model="form.password"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="24">
-          <div class="content-space">
-            <el-button type="primary" @click="submitForm('formUser')">Crear cliente</el-button>
-          </div>
-        </el-col>
-      </el-form>
-    </el-row>
-
+    </TableGeneral>
   </div>
 </template>
 
+<style lang="scss">
+  .el-select{
+    width: 100%;
+  }
+</style>
+
 <script>
-  import TitleSection from "../../components/TitleSection/TitleSection";
+
+  import TableGeneral from "../../components/tables/TableGeneral";
 
   export default {
     layout: 'dashboard',
@@ -71,11 +93,11 @@
       mode: 'out-in'
     },
     components: {
-      TitleSection: TitleSection
+      TableGeneral: TableGeneral
     },
     head () {
       return {
-        title: 'Creación de usuario',
+        title: 'Creación de servicio',
       }
     },
     methods: {

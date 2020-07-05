@@ -34,7 +34,10 @@
           <el-table-column
             label="Estatus de avance">
             <template slot-scope="scope">
-              <el-progress :percentage="scope.$index"></el-progress>
+              <el-progress
+                :percentage="scope.row.progress_status"
+                :status="defineProgress(scope.row.progress_status)" >
+              </el-progress>
             </template>
           </el-table-column>
           <el-table-column
@@ -84,6 +87,18 @@
       },
       handleEdit(index, row){
         this.$router.push('/services/'+row.id);
+      },
+      defineProgress(progress){
+        if(progress <= 10){
+          return '';
+        }
+        if (progress <= 50){
+          return 'exception';
+        }
+        if(progress < 100){
+          return 'warning';
+        }
+        return 'success'
       }
     },
     mounted() {
