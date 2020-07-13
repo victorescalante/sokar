@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TableGeneral title="Mantenimientos">
+    <TableGeneral title="Mantenimientos" color="yellow">
 
       <div class="actions">
         <nuxt-link to="services/create"><el-button class="el-button--primary" icon="el-icon-plus">Crear mantenimiento</el-button></nuxt-link>

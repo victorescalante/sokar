@@ -1,5 +1,5 @@
 <template>
-    <div class="custom-card-table">
+    <div :class="' custom-card-table ' + color">
       <div class="title">{{ title }}</div>
       <slot></slot>
     </div>
@@ -8,13 +8,33 @@
 <script>
     export default {
       name: "TableGeneral",
-      props: ['title']
+      props: ['title', 'color']
     }
 </script>
 
 <style lang="scss">
   .custom-card-table{
     padding-bottom: 50px;
+
+    &.purple{
+      .title{
+        background: white;
+      }
+    }
+
+    &.yellow{
+      .title{
+        background: #e5e500;
+        color: #000000;
+      }
+    }
+
+    &.green{
+      .title{
+        background: #33b105;
+        color: white;
+      }
+    }
 
     .title{
       background: $blue-dark;
@@ -32,5 +52,9 @@
       padding: 15px;
     }
 
+  }
+
+  .custom-paginator{
+      padding: 25px;
   }
 </style>

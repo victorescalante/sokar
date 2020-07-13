@@ -36,6 +36,15 @@
               </template>
             </el-table-column>
           </el-table>
+          <el-pagination
+            class="custom-paginator"
+            @size-change="handleSizeChange"
+            @current-change="HandleCurrentPage"
+            :page-sizes="[50, 100, 200]"
+            :page-size="50"
+            layout="sizes, prev, pager, next"
+            :total="total_data">
+          </el-pagination>
         </el-col>
       </el-row>
     </div>
@@ -49,11 +58,36 @@
 
 <script>
     export default {
-      props: ['data'],
+      props: ['data', 'total_data', 'role'],
+      data(){
+        return {
+          paginator: {
+            limit: 50,
+            page: 1,
+            role: this.role
+          }
+        }
+      },
       methods:{
         handleEdit(index, row){
           this.$router.push('/users/'+row.id);
-        }
+        },
+        async handleSizeChange(size) {
+          this.paginator.limit = size;
+          let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'users', {
+            params: this.paginator
+          });
+          this.data = data.data.rows;
+          this.total_data = data.data.total;
+        },
+        async HandleCurrentPage(page){
+          this.paginator.page = page;
+          let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'users', {
+            params: this.paginator
+          });
+          this.data = data.data.rows;
+          this.total_data = data.data.total;
+        },
       }
     };
 </script>

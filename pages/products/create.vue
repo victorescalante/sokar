@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TableGeneral title="Mantenimientos" color="yellow">
+    <TableGeneral title="Refacciones" color="purple">
 
       <el-row>
         <el-col :md="24" style="padding: 15px">
@@ -18,62 +18,59 @@
               </el-col>
               <el-form ref="formService" :rules="rules" :model="form" class="form-style-curds">
                 <el-col :md="8">
-                  <el-form-item label="Nombre del Cliente / Empresa" prop="name">
-                    <el-select v-model="form.region" placeholder="Selecciona un cliente">
-                      <el-option label="Empresa SRF" value="shanghai"></el-option>
-                      <el-option label="Victor Estrada Mur" value="beijing"></el-option>
-                      <el-option label="Blanca Carmona" value="vc"></el-option>
+                  <el-form-item label="Nombre de la refacción">
+                    <el-input v-model="form.name"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :md="8">
+                  <el-form-item label="Código">
+                    <el-input v-model="form.code"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :md="4">
+                  <el-form-item label="Cantidad de piezas">
+                    <el-input-number size="mini" v-model="form.quantity" :min="1"></el-input-number>
+                  </el-form-item>
+                </el-col>
+                <el-col :md="4">
+                  <el-form-item label="Inventario">
+                    <el-input-number size="mini" v-model="form.quantity" :min="1"></el-input-number>
+                  </el-form-item>
+                </el-col>
+                <el-col :md="8">
+                  <el-form-item label="Tipo de producto" prop="name">
+                    <el-select v-model="form.product_id" placeholder="Selecciona un tipo de producto">
+                      <el-option v-for="product in products" :label="product.name" :value="product.id"></el-option>
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :md="8">
-                  <el-form-item label="Nombre del Técnico" prop="last_name">
-                    <el-select v-model="form.region" placeholder="Selecciona un técnico">
-                      <el-option label="Armando Trujillo" value="shanghai"></el-option>
+                  <el-form-item label="Categoría" prop="name">
+                    <el-select v-model="form.category_id" placeholder="Selecciona una categoría">
+                      <el-option v-for="category in categories" :label="category.name" :value="category.id"></el-option>
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :md="8">
-                  <el-form-item label="Equipo" prop="last_name">
-                    <el-select v-model="form.region" placeholder="Selecciona un equipo">
-                      <el-option label="Equipo 00999" value="shanghai"></el-option>
-                      <el-option label="Equipo 77776" value="beijing"></el-option>
-                      <el-option label="Equipo 555564" value="beijing"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Tipo de mantenimiento" prop="last_name">
-                    <el-select v-model="form.region" placeholder="Selecciona un tipo de mantenimiento">
-                      <el-option label="Preventivo" value="shanghai"></el-option>
-                      <el-option label="Corrrectivo" value="beijing"></el-option>
-                      <el-option label="Virtual" value="beijing"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Fecha de mantenimiento">
-                    <el-date-picker type="date" placeholder="Pick a date" v-model="form.date1" style="width: 100%;"></el-date-picker>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Fecha de mantenimiento (termino)">
-                    <el-date-picker type="date" placeholder="Pick a date" v-model="form.date1" style="width: 100%;"></el-date-picker>
+                  <el-form-item label="Precio">
+                    <el-input placeholder="Coloca el precio" v-model="input1">
+                      <template slot="prepend">$</template>
+                    </el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :md="24">
-                  <el-form-item label="Descripción de actividad">
-                    <el-input type="textarea" rows="5" v-model="form.desc"></el-input>
+                  <el-form-item label="Caracteristicas de la refacción">
+                    <el-input type="textarea" rows="5"  v-model="form.desc"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :md="24" class="custom-buttons">
-                  <el-button type="primary">Crear Mantenimiento</el-button>
+                  <el-button type="primary">Agregar Refacción</el-button>
                 </el-col>
               </el-form>
             </el-row>
           </el-card>
         </el-col>
-        <el-col :md="6"></el-col>
+
       </el-row>
 
     </TableGeneral>
@@ -84,7 +81,6 @@
   .el-select{
     width: 100%;
   }
-
   .custom-buttons{
     padding: 15px;
     text-align: right;
@@ -107,10 +103,24 @@
     },
     head () {
       return {
-        title: 'Creación de servicio',
+        title: 'Creación de Refacciones',
       }
     },
+    mounted: function () {
+      this.$nextTick(function () {
+        this.getProducts();
+        this.getCategories();
+      })
+    },
     methods: {
+      async getProducts() {
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'repairs/products');
+        this.products = data.data.products;
+      },
+      async getCategories() {
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'repairs/categories');
+        this.categories = data.data.categories;
+      },
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
@@ -140,13 +150,16 @@
     },
     data(){
       return {
+        products: [],
+        categories: [],
         form: {
           name: '',
           last_name: '',
           second_last_name: '',
           email: '',
           password: '',
-          role: 'cliente'
+          role: 'cliente',
+          num: 1
         },
         rules: {
           name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],

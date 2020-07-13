@@ -66,7 +66,7 @@ export default {
       login: '/login',
       logout: '/login',
       callback: '/login',
-      home: '/home'
+      home: '/'
     },
     cookie: {
       prefix: 'auth.',

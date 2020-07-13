@@ -52,11 +52,14 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 
-  .el-form-item__label{
-    line-height: 15px;
+  .form_login{
+    .el-form-item__label{
+      line-height: 15px;
+    }
   }
+
 
   @keyframes gradient {
     0% {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row class="tac">
-      <el-col :sm="6" :md="4" :lg="3">
+      <el-col :sm="6" :md="5">
         <div class="logo-diken-imge">
           <img src="~/assets/images/diken_logo.png" alt="Diken">
         </div>
@@ -16,7 +16,7 @@
         </div>
         <NavBar></NavBar>
       </el-col>
-      <el-col :md="20" :lg="21" class="col-content">
+      <el-col :md="19" class="col-content">
         <NavTop></NavTop>
         <div class="content-layout">
           <div class="real-content">
@@ -25,7 +25,6 @@
         </div>
       </el-col>
     </el-row>
-
   </div>
 </template>
 

@@ -8,18 +8,18 @@
       </div>
 
       <div class="content">
-        <el-tabs v-model="activeName">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="Todos" name="all">
-            <TableUsers :data="myTable()"></TableUsers>
+            <TableUsers :data="myTable()" :total_data="total_data"></TableUsers>
           </el-tab-pane>
           <el-tab-pane label="Técnicos" name="tecnico">
-            <TableUsers :data="myTable('tecnico')"></TableUsers>
+            <TableUsers :data="myTable('tecnico')" :total_data="total_data" role="tecnico"></TableUsers>
           </el-tab-pane>
           <el-tab-pane label="Asesores" name="asesor">
-            <TableUsers :data="myTable('asesor')"></TableUsers>
+            <TableUsers :data="myTable('asesor')" :total_data="total_data" role="asesor"></TableUsers>
           </el-tab-pane>
           <el-tab-pane label="Administradores" name="admin">
-            <TableUsers :data="myTable('admin')"></TableUsers>
+            <TableUsers :data="myTable('admin')" :total_data="total_data" role="admin"></TableUsers>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -31,7 +31,7 @@
     <el-dialog
       title="Agregar usuario"
       :visible.sync="dialogCreateUser"
-      width="50%">
+      width="60%">
 
       <el-row>
         <el-form ref="formUser" :rules="rules" :model="form" class="form-style-curds">
@@ -126,6 +126,12 @@
     data(){
       return {
         data: [],
+        total_data: 0,
+        paginator: {
+          limit: 50,
+          page: 1,
+          role: this.role
+        },
         activeName: 'all',
         dialogCreateUser: false,
         form: {
@@ -146,9 +152,22 @@
       }
     },
     methods: {
+      async handleClick(tab, event) {
+        if (tab.name !== 'all') {
+          this.paginator.role = tab.name;
+        }else{
+          this.paginator.role = "";
+        }
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'users', {
+          params: this.paginator
+        });
+        this.data = data.data.rows;
+        this.total_data = data.data.total;
+      },
       async init() {
         let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'users');
-        this.data = data.data.users;
+        this.data = data.data.rows;
+        this.total_data = data.data.total;
       },
       myTable(role){
         if (role){

@@ -22,6 +22,16 @@ FORMS
   padding: 15px;
 }
 
+.el-input-number__increase{
+  background: rgba(25, 137, 250, 1);
+  color: white;
+}
+
+.el-input-number__decrease{
+  background: rgba(25, 137, 250, 1);
+  color: white;
+}
+
 
 /**
 Override

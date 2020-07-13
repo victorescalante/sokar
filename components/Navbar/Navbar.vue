@@ -3,8 +3,8 @@
       <el-menu
         class="el-menu-vertical"
       >
-        <nuxt-link to="/home">
-          <el-menu-item to="/home" index="1">
+        <nuxt-link to="/">
+          <el-menu-item to="/" index="1">
               <i class="el-icon-house"></i>
               <span>Home</span>
           </el-menu-item>
@@ -17,17 +17,25 @@
         </nuxt-link>
         <nuxt-link to="/clients" v-if="currentRole(['admin','asesor', 'tecnico'])">
           <el-menu-item index="3">
-            <i class="el-icon-user"></i>
+            <i class="el-icon-user-solid"></i>
             <span>Clientes</span>
           </el-menu-item>
         </nuxt-link>
-        <el-menu-item index="4">
-          <i class="el-icon-setting"></i>
-          <span>Equipos</span>
-        </el-menu-item>
-        <nuxt-link to="/services">
-          <el-menu-item index="5">
+        <nuxt-link to="/repair">
+          <el-menu-item index="4">
             <i class="el-icon-setting"></i>
+            <span>Refacciones</span>
+          </el-menu-item>
+        </nuxt-link>
+        <nuxt-link to="/products">
+          <el-menu-item index="5">
+            <i class="el-icon-folder"></i>
+            <span>Equipos</span>
+          </el-menu-item>
+        </nuxt-link>
+        <nuxt-link to="/services">
+          <el-menu-item index="6">
+            <i class="el-icon-edit-outline"></i>
             <span>Mantenimiento</span>
           </el-menu-item>
         </nuxt-link>
