@@ -41,6 +41,15 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-pagination
+          class="custom-paginator"
+          @size-change="handleSizeChange"
+          @current-change="HandleCurrentPage"
+          :page-sizes="[50, 100, 200]"
+          :page-size="50"
+          layout="sizes, prev, pager, next"
+          :total="total_data">
+        </el-pagination>
       </div>
     </TableGeneral>
 
@@ -102,13 +111,35 @@
         viewData: {
           product: {},
           category: {}
-        }
+        },
+        paginator: {
+          limit: 50,
+          page: 1
+        },
+        total_data: 0,
       }
     },
     methods: {
+      async handleSizeChange(size) {
+        this.paginator.limit = size;
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'products', {
+          params: this.paginator
+        });
+        this.data = data.data.rows;
+        this.total_data = data.data.total;
+      },
+      async HandleCurrentPage(page){
+        this.paginator.page = page;
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'products', {
+          params: this.paginator
+        });
+        this.data = data.data.rows;
+        this.total_data = data.data.total;
+      },
       async init() {
         let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'products');
-        this.data = data.data.products;
+        this.data = data.data.rows;
+        this.total_data = data.data.total;
       },
       handleEdit(index, row){
         this.$router.push('/repair/'+row.id);

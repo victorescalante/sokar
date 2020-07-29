@@ -102,7 +102,7 @@
             if (this.form.password.length <= 1){
               delete this.form.password;
             }
-            this.$axios.patch(process.env.URL_RA_BACKEND+'users/'+this.$route.params.id, this.form)
+            this.$axios.put(process.env.URL_RA_BACKEND+'users/'+this.$route.params.id, this.form)
               .then(response => {
                 this.$notify({
                   title: 'Success',

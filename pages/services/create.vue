@@ -1,79 +1,75 @@
 <template>
-  <div>
-    <TableGeneral title="Mantenimientos" color="yellow">
-
+  <div class="table-general">
+    <TableGeneral title="Mantenimiento" color="purple">
       <el-row>
-        <el-col :md="24" style="padding: 15px">
+        <el-col :md="24">
           <el-card>
             <el-row>
-              <el-col :md="24">
-                <h3>Registro</h3>
-                <br>
-                <hr>
+              <el-col :md="24" style="padding-left: 10px">
+                <h3>Visita de mantenimiento</h3>
               </el-col>
-              <el-col :md="24">
-                <div class="content-space">
-                  <p>Información de registro</p>
-                </div>
+              <el-col :md="24" style="padding-top: 15px">
+                <el-form ref="formService" :rules="rules" :model="form" class="form-style-curds">
+                  <el-row>
+                    <el-col :md="8">
+                      <el-form-item label="Nombre del Cliente / Empresa" prop="client_id">
+                        <el-select filterable v-model="form.client_id" @change="getProductsOfClients" placeholder="Selecciona un cliente">
+                          <el-option
+                            v-for="client in clients"
+                            :key="client.id"
+                            :label="client.name"
+                            :value="client.id">
+                          </el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="8">
+                      <el-form-item label="Nombre del Técnico" prop="technical_id">
+                        <el-select v-model="form.technical_id" filterable placeholder="Selecciona un técnico">
+                          <el-option
+                            v-for="tech in techs"
+                            :key="tech.id"
+                            :label="tech.name"
+                            :value="tech.id">
+                          </el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col v-if="products.length >= 1" :md="24">
+                      <div style="padding: 15px">
+                        <p><strong>Selecciona los equipos a los cuales deseas realizar mantenimiento</strong></p>
+                        <el-row class="container-card" :gutter="15">
+                            <el-col :md="8" v-for="product_user in products">
+                              <el-card class="box-card">
+                                <div slot="header" class="clearfix">
+                                  <span><b>{{ product_user.product.name }}</b></span>
+                                </div>
+                                <p>última fecha de mantenimiento</p>
+                                <b>{{ $convertDateToHuman(product_user.last_service) }}</b>
+                                <p>Fecha de mantenimiento proxima</p>
+                                <b style="color: #5d3ce7">{{ $convertDateToHuman(product_user.next_service) }}</b>
+                                <br>
+                                <el-checkbox-group v-model="form.product_user_ids" style="text-align: right; padding: 15px">
+                                  <el-checkbox :label="product_user.id">Seleccionar</el-checkbox>
+                                </el-checkbox-group>
+                              </el-card>
+                            </el-col>
+                        </el-row>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :md="24" class="custom-buttons">
+                      <el-button type="primary" @click="submitForm('formService')" :disabled="form.product_user_ids.length <= 0">Crear ordenes de servicio</el-button>
+                    </el-col>
+                  </el-row>
+                </el-form>
               </el-col>
-              <el-form ref="formService" :rules="rules" :model="form" class="form-style-curds">
-                <el-col :md="8">
-                  <el-form-item label="Nombre del Cliente / Empresa" prop="name">
-                    <el-select v-model="form.region" placeholder="Selecciona un cliente">
-                      <el-option label="Empresa SRF" value="shanghai"></el-option>
-                      <el-option label="Victor Estrada Mur" value="beijing"></el-option>
-                      <el-option label="Blanca Carmona" value="vc"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Nombre del Técnico" prop="last_name">
-                    <el-select v-model="form.region" placeholder="Selecciona un técnico">
-                      <el-option label="Armando Trujillo" value="shanghai"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Equipo" prop="last_name">
-                    <el-select v-model="form.region" placeholder="Selecciona un equipo">
-                      <el-option label="Equipo 00999" value="shanghai"></el-option>
-                      <el-option label="Equipo 77776" value="beijing"></el-option>
-                      <el-option label="Equipo 555564" value="beijing"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Tipo de mantenimiento" prop="last_name">
-                    <el-select v-model="form.region" placeholder="Selecciona un tipo de mantenimiento">
-                      <el-option label="Preventivo" value="shanghai"></el-option>
-                      <el-option label="Corrrectivo" value="beijing"></el-option>
-                      <el-option label="Virtual" value="beijing"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Fecha de mantenimiento">
-                    <el-date-picker type="date" placeholder="Pick a date" v-model="form.date1" style="width: 100%;"></el-date-picker>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Fecha de mantenimiento (termino)">
-                    <el-date-picker type="date" placeholder="Pick a date" v-model="form.date1" style="width: 100%;"></el-date-picker>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="24">
-                  <el-form-item label="Descripción de actividad">
-                    <el-input type="textarea" rows="5" v-model="form.desc"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="24" class="custom-buttons">
-                  <el-button type="primary">Crear Mantenimiento</el-button>
-                </el-col>
-              </el-form>
             </el-row>
           </el-card>
         </el-col>
-        <el-col :md="6"></el-col>
       </el-row>
 
     </TableGeneral>
@@ -87,7 +83,15 @@
 
   .custom-buttons{
     padding: 15px;
-    text-align: right;
+  }
+
+  .table-general{
+    .container-card{
+      padding: 15px 0;
+      .box-card{
+        margin-top: 15px;
+      }
+    }
   }
 </style>
 
@@ -110,25 +114,55 @@
         title: 'Creación de servicio',
       }
     },
+    mounted() {
+      this.init();
+    },
     methods: {
+      async init() {
+        let clients = await this.$axios.$get(process.env.URL_RA_BACKEND+'clients?limit=200');
+        let techs = await this.$axios.$get(process.env.URL_RA_BACKEND+'users?limit=200&role=tecnico');
+        this.clients = clients.data.rows;
+        this.techs = techs.data.rows;
+      },
+      async getProductsOfClients(value) {
+        this.form.product_user_ids = [];
+        let products = await this.$axios.$get(process.env.URL_RA_BACKEND + 'clients/'+value+'/product-relation?limit=200');
+        this.products = products.data.rows;
+        if (this.products.length <= 0){
+          this.$confirm('<p>Este cliente aún no tiene equipos asignados, <b>¿Quieres asignar un equipo al cliente?</b></p>', 'Imposible ofrecer mantenimiento', {
+            dangerouslyUseHTMLString: true,
+            confirmButtonText: 'SI',
+            cancelButtonText: 'NO',
+            type: 'error'
+          }).then(() => {
+            this.$router.push('/clients/'+value);
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: 'Ha sido cancelada la operación'
+            });
+          });
+        }
+      },
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$axios.post(process.env.URL_RA_BACKEND+'users', this.form)
+            this.$axios.post(process.env.URL_RA_BACKEND+'services', this.form)
               .then(response => {
                 this.$notify({
                   title: 'Success',
-                  message: 'El cliente fue creado correctamente',
+                  message: 'El servicio fue creado correctamente',
                   type: 'success'
                 });
-                this.$router.push('/clients');
+                console.log(response);
+                this.$router.push('/services/'+response.data.data.id);
               }).catch(function (error) {
               this.$notify.error({
                 title: 'Error',
-                message: 'El cliente no ha posido ser creado'
+                message: 'El servicio no ha posido ser creado'
               });
             });
 
@@ -140,19 +174,17 @@
     },
     data(){
       return {
+        clients: [],
+        techs: [],
+        products: [],
+        clientHaveProducts: false,
         form: {
-          name: '',
-          last_name: '',
-          second_last_name: '',
-          email: '',
-          password: '',
-          role: 'cliente'
+          product_user_ids: [],
+          client_id: "",
+          technical_id: ""
         },
         rules: {
-          name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],
-          last_name: [{required: true, message: 'Agrega apellido', trigger: 'blur'}],
-          email: [{required: true, message: 'Agrega un correo', trigger: 'blur'}],
-          password: [{required: true, message: 'Agrega una contraseña', trigger: 'blur'}]
+
         }
       }
     }

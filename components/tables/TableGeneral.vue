@@ -29,9 +29,23 @@
       }
     }
 
+    &.orange{
+      .title{
+        background: orangered;
+        color: white;
+      }
+    }
+
     &.green{
       .title{
         background: #33b105;
+        color: white;
+      }
+    }
+
+    &.purple{
+      .title{
+        background: #9103b1;
         color: white;
       }
     }

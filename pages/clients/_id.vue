@@ -2,13 +2,13 @@
   <div>
 
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/users' }">Usuarios</el-breadcrumb-item>
-      <el-breadcrumb-item>Actualizar de usuario</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/clients' }">Clientes</el-breadcrumb-item>
+      <el-breadcrumb-item>Actualizar cliente</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-row class="group-title">
       <el-col :md="12">
-        <TitleSection title="Actualizar Cliente"></TitleSection>
+        <TitleSection title="Cliente"></TitleSection>
       </el-col>
     </el-row>
 
@@ -45,14 +45,19 @@
           </el-form-item>
         </el-col>
         <el-col :md="6">
-          <el-form-item label="Nueva Contraseña" prop="password">
-            <el-input type="password" v-model="form.password"></el-input>
-          </el-form-item>
+          <el-tooltip class="item" effect="dark" content="Agrega una contraseña, solo si deseas hacer el cambio." placement="top-start">
+            <el-form-item label="Nueva Contraseña" prop="password">
+              <el-input type="password" v-model="form.password"></el-input>
+            </el-form-item>
+          </el-tooltip>
         </el-col>
         <el-col :md="24">
           <div class="content-space">
-            <el-button type="primary" @click="submitForm('formUser')">Actualizar usuario</el-button>
+            <el-button type="primary"  @click="submitForm('formUser')">Actualizar cliente</el-button>
           </div>
+        </el-col>
+        <el-col :md="24">
+          <TableProducts :data="products" ></TableProducts>
         </el-col>
       </el-form>
     </el-row>
@@ -62,6 +67,7 @@
 
 <script>
   import TitleSection from "../../components/TitleSection/TitleSection";
+  import TableProducts from "../../components/products/TableProducts";
 
   export default {
     layout: 'dashboard',
@@ -71,48 +77,44 @@
       mode: 'out-in'
     },
     components: {
-      TitleSection: TitleSection
+      TitleSection: TitleSection,
+      TableProducts: TableProducts
     },
     head () {
       return {
-        title: 'Actualización de usuario',
+        title: 'Actualización de cliente',
       }
     },
     data(){
       return {
         form: {
-          name: '',
-          last_name: '',
-          second_last_name: '',
-          email: '',
-          password: '',
-          role: 'cliente'
+          role: "client",
+          password: ""
         },
         rules: {
           name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],
           last_name: [{required: true, message: 'Agrega apellido', trigger: 'blur'}],
           email: [{required: true, message: 'Agrega un correo', trigger: 'blur'}]
-        }
+        },
+        products: []
       }
     },
     methods: {
       submitForm(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if (this.form.password.length <= 1){
-              delete this.form.password;
-            }
-            this.$axios.patch(process.env.URL_RA_BACKEND+'users/'+this.$route.params.id, this.form)
+            console.log(this.form);
+            this.$axios.patch(process.env.URL_RA_BACKEND+'clients/'+this.$route.params.id, this.form)
               .then(response => {
                 this.$notify({
-                  title: 'Success',
-                  message: 'El usuario fue actualizado correctamente',
+                  title: 'Notificación',
+                  message: 'El cliente fue actualizado correctamente',
                   type: 'success'
                 });
               }).catch(function (error) {
               this.$notify.error({
                 title: 'Error',
-                message: 'El usuario no ha posido ser actualizado'
+                message: 'El cliente no ha posido ser actualizado'
               });
             });
           } else {
@@ -121,16 +123,27 @@
         });
       },
       getUser() {
-        this.$axios.get(process.env.URL_RA_BACKEND + 'users/' + this.$route.params.id)
+        this.$axios.get(process.env.URL_RA_BACKEND + 'clients/' + this.$route.params.id)
           .then(response => {
             this.form = response.data.data.user;
+            console.log('form ',this.form);
           }).catch(function (error) {
-          console.log("error");
+            console.log("error");
           });
+      },
+      getProducts(){
+        this.$axios.get(process.env.URL_RA_BACKEND + 'clients/' + this.$route.params.id + '/product-relation')
+          .then(response => {
+            this.products = response.data.data.rows;
+            console.log(this.products);
+          }).catch(function (error) {
+          console.log("error", error);
+        });
       }
     },
     mounted() {
       this.getUser();
+      this.getProducts();
     }
   }
 </script>

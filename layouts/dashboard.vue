@@ -81,6 +81,7 @@ html {
 
   .real-content{
     background: white;
+    padding: 15px;
   }
 
   .el-menu--horizontal > .el-submenu{

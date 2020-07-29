@@ -1,16 +1,18 @@
 <template>
   <div>
 
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/users' }">Usuarios</el-breadcrumb-item>
-      <el-breadcrumb-item>Actualizar de usuario</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="content-space">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{ path: '/users' }">Usuarios</el-breadcrumb-item>
+        <el-breadcrumb-item>Actualizar de usuario</el-breadcrumb-item>
+      </el-breadcrumb>
 
-    <el-row class="group-title">
-      <el-col :md="12">
-        <TitleSection title="Actualizar usuario"></TitleSection>
-      </el-col>
-    </el-row>
+      <el-row class="group-title">
+        <el-col :md="12">
+          <TitleSection title="Actualizar usuario"></TitleSection>
+        </el-col>
+      </el-row>
+    </div>
 
     <el-row>
       <el-col :md="24">
@@ -109,7 +111,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             delete this.form.password;
-            this.$axios.patch(process.env.URL_RA_BACKEND+'users/'+this.$route.params.id, this.form)
+            this.$axios.put(process.env.URL_RA_BACKEND+'users/'+this.$route.params.id, this.form)
               .then(response => {
                 this.$notify({
                   title: 'Success',

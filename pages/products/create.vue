@@ -114,7 +114,7 @@
     },
     methods: {
       async getProducts() {
-        let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'repairs/products');
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'repairs/product-relation');
         this.products = data.data.products;
       },
       async getCategories() {

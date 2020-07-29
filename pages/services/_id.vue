@@ -1,67 +1,99 @@
 <template>
-  <div>
-
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/users' }">Usuarios</el-breadcrumb-item>
-      <el-breadcrumb-item>Actualizar de usuario</el-breadcrumb-item>
-    </el-breadcrumb>
-
-    <el-row class="group-title">
-      <el-col :md="12">
-        <TitleSection title="Actualizar Cliente"></TitleSection>
-      </el-col>
-    </el-row>
-
-    <el-row>
-      <el-col :md="24">
-        <div class="content-space">
-          <p>Información personal del usuario</p>
-        </div>
-      </el-col>
-      <el-form ref="formUser" :rules="rules" :model="form" class="form-style-curds">
-        <el-col :md="6">
-          <el-form-item label="Nombre completo" prop="name">
-            <el-input v-model="form.name" required></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="6">
-          <el-form-item label="Apellido Paterno" prop="last_name">
-            <el-input v-model="form.last_name"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="6">
-          <el-form-item label="Apellido Materno" prop="second_last_name">
-            <el-input v-model="form.second_last_name"></el-input>
-          </el-form-item>
-        </el-col>
+  <div class="table-general">
+    <TableGeneral title="Mantenimiento" color="purple">
+      <el-row>
         <el-col :md="24">
-          <div class="content-space">
-            <p>Datos de acceso a la plataforma</p>
-          </div>
+          <el-card>
+            <el-row>
+              <el-col :md="24" style="padding-left: 10px">
+                <h3>Visita de mantenimiento</h3>
+              </el-col>
+              <el-col :md="24" style="padding-top: 15px">
+                <el-form ref="formService" :rules="rules" :model="form" class="form-style-curds">
+                  <el-row>
+                    <el-col :md="8">
+                      <el-form-item label="Nombre del Cliente / Empresa" prop="client_id">
+                        <el-select filterable v-model="form.client_id" @change="getProductsOfClients" placeholder="Selecciona un cliente" disabled>
+                          <el-option
+                            v-for="client in clients"
+                            :key="client.id"
+                            :label="client.name"
+                            :value="client.id">
+                          </el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="8">
+                      <el-form-item label="Nombre del Técnico" prop="technical_id">
+                        <el-select v-model="form.technical_id" filterable placeholder="Selecciona un técnico" disabled>
+                          <el-option
+                            v-for="tech in techs"
+                            :key="tech.id"
+                            :label="tech.name"
+                            :value="tech.id">
+                          </el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col v-if="products.length >= 1" :md="24">
+                      <div style="padding: 15px">
+                        <p><strong>Selecciona los equipos a los cuales deseas realizar mantenimiento</strong></p>
+                        <el-row class="container-card" :gutter="15">
+                          <el-col :md="8" v-for="product_user in products">
+                            <el-card class="box-card">
+                              <div slot="header" class="clearfix">
+                                <span><b>{{ product_user.product.name }}</b></span>
+                              </div>
+                              <p>última fecha de mantenimiento</p>
+                              <b>{{ $convertDateToHuman(product_user.last_service) }}</b>
+                              <p>Fecha de mantenimiento proxima</p>
+                              <b style="color: #5d3ce7">{{ $convertDateToHuman(product_user.next_service) }}</b>
+                              <br>
+                              <el-checkbox-group v-model="form.product_user_ids" style="text-align: right; padding: 15px">
+                                <el-checkbox :label="product_user.product.id" disabled>Seleccionar</el-checkbox>
+                              </el-checkbox-group>
+                            </el-card>
+                          </el-col>
+                        </el-row>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </el-col>
+            </el-row>
+          </el-card>
         </el-col>
-        <el-col :md="6">
-          <el-form-item label="Correo electrónico" prop="email">
-            <el-input v-model="form.email"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="6">
-          <el-form-item label="Nueva Contraseña" prop="password">
-            <el-input type="password" v-model="form.password"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="24">
-          <div class="content-space">
-            <el-button type="primary" @click="submitForm('formUser')">Actualizar usuario</el-button>
-          </div>
-        </el-col>
-      </el-form>
-    </el-row>
+      </el-row>
 
+    </TableGeneral>
   </div>
 </template>
 
+<style lang="scss">
+  .el-select{
+    width: 100%;
+  }
+
+  .custom-buttons{
+    padding: 15px;
+  }
+
+  .table-general{
+    .container-card{
+      padding: 15px 0;
+      .box-card{
+        margin-top: 15px;
+      }
+    }
+  }
+</style>
+
 <script>
   import TitleSection from "../../components/TitleSection/TitleSection";
+  import TableGeneral from "../../components/tables/TableGeneral";
+  import _ from 'lodash';
 
   export default {
     layout: 'dashboard',
@@ -71,66 +103,64 @@
       mode: 'out-in'
     },
     components: {
-      TitleSection: TitleSection
+      TitleSection: TitleSection,
+      TableGeneral: TableGeneral
     },
     head () {
       return {
-        title: 'Actualización de usuario',
+        title: 'Actualización de servicio',
       }
     },
     data(){
       return {
+        upload: {
+          url: process.env.URL_RA_BACKEND+'files',
+          headers: {
+            'Authorization': this.$auth.getToken('local')
+          },
+          data: {
+            category: 'default',
+            model_id: '',
+            model: 0
+          },
+          list: []
+        },
+        dialogImageUrl: '',
+        clients: [],
+        techs: [],
+        products: [],
+        clientHaveProducts: false,
         form: {
-          name: '',
-          last_name: '',
-          second_last_name: '',
-          email: '',
-          password: '',
-          role: 'cliente'
+          product_user_ids: [],
+          client_id: "",
+          technical_id: ""
         },
         rules: {
-          name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],
-          last_name: [{required: true, message: 'Agrega apellido', trigger: 'blur'}],
-          email: [{required: true, message: 'Agrega un correo', trigger: 'blur'}]
+
         }
       }
     },
     methods: {
-      submitForm(formName){
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            if (this.form.password.length <= 1){
-              delete this.form.password;
-            }
-            this.$axios.patch(process.env.URL_RA_BACKEND+'users/'+this.$route.params.id, this.form)
-              .then(response => {
-                this.$notify({
-                  title: 'Success',
-                  message: 'El usuario fue actualizado correctamente',
-                  type: 'success'
-                });
-              }).catch(function (error) {
-              this.$notify.error({
-                title: 'Error',
-                message: 'El usuario no ha posido ser actualizado'
-              });
-            });
-          } else {
-            return false;
-          }
-        });
+      async init() {
+        let clients = await this.$axios.$get(process.env.URL_RA_BACKEND + 'clients?limit=200');
+        let techs = await this.$axios.$get(process.env.URL_RA_BACKEND + 'users?limit=200&role=tecnico');
+        this.clients = clients.data.rows;
+        this.techs = techs.data.rows;
       },
-      getUser() {
-        this.$axios.get(process.env.URL_RA_BACKEND + 'users/' + this.$route.params.id)
-          .then(response => {
-            this.form = response.data.data.user;
-          }).catch(function (error) {
-          console.log("error");
-          });
+      async getService() {
+        let service = await this.$axios.$get(process.env.URL_RA_BACKEND + 'services/' + this.$route.params.id)
+        let products = await this.$axios.$get(process.env.URL_RA_BACKEND + 'clients/'+service.data.service.client_id+'/product-relation?limit=200');
+        this.products = products.data.rows;
+        this.form.client_id = service.data.service.client_id;
+        this.form.technical_id = service.data.service.technical_id;
+        this.form.product_user_ids = _.map(service.data.service.reports, function (report) {
+          return report.product_user.product.id;
+        })
       }
     },
     mounted() {
-      this.getUser();
+      this.init();
+      this.getService();
     }
   }
 </script>

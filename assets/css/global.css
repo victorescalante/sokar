@@ -32,6 +32,9 @@ FORMS
   color: white;
 }
 
+.el-notification__content{
+  text-align: left;
+}
 
 /**
 Override
