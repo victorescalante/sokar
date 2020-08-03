@@ -1,6 +1,6 @@
 language: node_js
 install:
-  - npm install nuxt
+  - npm install
   - npm run generate
 after_success:
   "curl -T Dockerfile -u $FTP_USER:$FTP_PASSWORD ftp://192.232.238.157/public_html/"
