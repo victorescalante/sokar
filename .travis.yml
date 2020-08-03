@@ -16,4 +16,4 @@ install:
   - npm run generate
 
 after_success:
-  gulp deploy --user "victor@ccsapp.dikeninternational.com" --password "LUDwig2639+"
+  gulp deploy --user $FTP_USER --password $FTP_PASSWORD

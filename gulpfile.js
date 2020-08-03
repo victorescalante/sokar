@@ -4,7 +4,7 @@ var gutil = require('gulp-util');
 var minimist = require('minimist');
 var args = minimist(process.argv.slice(2));
 
-gulp.task('deploy', function() {
+gulp.task('deploy', async function() {
   var remotePath = './dist';
   var publicPath = '/public_html/';
   var conn = ftp.create({
@@ -17,7 +17,4 @@ gulp.task('deploy', function() {
 gulp.src(['dist/**'], {buffer: false})
   .pipe(conn.newer(remotePath))
   .pipe(conn.dest(publicPath));
-
-return true;
-
 });
