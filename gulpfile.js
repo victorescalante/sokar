@@ -17,4 +17,7 @@ gulp.task('deploy', function() {
 gulp.src(['dist/**'], {buffer: false})
   .pipe(conn.newer(remotePath))
   .pipe(conn.dest(publicPath));
+
+return true;
+
 });
