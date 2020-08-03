@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - '14.5'
+  - '14.5.0'
 
 cache:
   directories:
@@ -16,4 +16,4 @@ install:
   - npm run generate
 
 after_success:
-  gulp deploy --user $FTP_USER --password $FTP_PASSWORD
+  gulp deploy --user "victor@ccsapp.dikeninternational.com" --password "LUDwig2639+"
