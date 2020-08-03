@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TableGeneral title="Mantenimientos" color="yellow">
+    <TableGeneral title="Mantenimientos" color="purple">
 
       <div class="actions">
         <nuxt-link to="services/create"><el-button class="el-button--primary" icon="el-icon-plus">Crear mantenimiento</el-button></nuxt-link>
@@ -12,32 +12,22 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="name"
-            label="Nombre">
-          </el-table-column>
-          <el-table-column
             prop="client.name"
-            label="Cliente">
+            label="Nombre del cliente">
           </el-table-column>
           <el-table-column
             prop="technical.name"
-            label="Tecnico">
-          </el-table-column>
-          <el-table-column
-            prop="type"
-            label="Tipo">
+            label="Nombre del tecnico">
           </el-table-column>
           <el-table-column
             prop="created_at"
             label="Creado">
           </el-table-column>
           <el-table-column
-            label="Estatus de avance">
+            align="center"
+            label="Número de servicios">
             <template slot-scope="scope">
-              <el-progress
-                :percentage="scope.row.progress_status"
-                :status="defineProgress(scope.row.progress_status)" >
-              </el-progress>
+              {{ scope.row.reports.length }}
             </template>
           </el-table-column>
           <el-table-column

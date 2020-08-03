@@ -47,7 +47,7 @@
           </el-form-item>
         </el-col>
         <el-col :md="6">
-          <el-form-item label="Contraseña" prop="password">
+          <el-form-item label="Nueva contraseña" prop="password">
             <el-input type="password" v-model="form.password"></el-input>
           </el-form-item>
         </el-col>
@@ -55,6 +55,7 @@
           <el-form-item label="Rol" prop="role">
             <el-select v-model="form.role" placeholder="Selecciona un rol">
               <el-option label="Asesor" value="asesor"></el-option>
+              <el-option label="Admin" value="admin"></el-option>
               <el-option label="Tecnico" value="tecnico"></el-option>
             </el-select>
           </el-form-item>
@@ -110,7 +111,8 @@
       submitForm(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            delete this.form.password;
+            // console.log(this.form.password.length);
+            // delete this.form.password;
             this.$axios.put(process.env.URL_RA_BACKEND+'users/'+this.$route.params.id, this.form)
               .then(response => {
                 this.$notify({

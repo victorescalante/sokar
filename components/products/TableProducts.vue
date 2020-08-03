@@ -59,7 +59,7 @@
               <el-form-item label="Tipo de Equipo">
                 <el-select v-model="form.product_type" placeholder="Selecciona el tipo de equipo">
                   <el-option label="Propio" value="own"></el-option>
-                  <el-option label="Prestado" value="borrowed"></el-option>
+                  <el-option label="Comodato" value="borrowed"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -142,7 +142,7 @@
             return "Propio";
           }
           if (type === 'borrowed'){
-            return "Prestado";
+            return "Comodato";
           }
         },
         getStatus(status){

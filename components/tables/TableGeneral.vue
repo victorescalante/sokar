@@ -15,6 +15,9 @@
 <style lang="scss">
   .custom-card-table{
     padding-bottom: 50px;
+    .title{
+      border-radius: 5px;
+    }
 
     &.purple{
       .title{

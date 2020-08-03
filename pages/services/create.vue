@@ -25,7 +25,7 @@
                     </el-col>
                     <el-col :md="8">
                       <el-form-item label="Nombre del Técnico" prop="technical_id">
-                        <el-select v-model="form.technical_id" filterable placeholder="Selecciona un técnico">
+                        <el-select v-model="form.technical_id" filterable placeholder="Selecciona un técnico" :disabled="isTechUser">
                           <el-option
                             v-for="tech in techs"
                             :key="tech.id"
@@ -33,6 +33,16 @@
                             :value="tech.id">
                           </el-option>
                         </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="8">
+                      <el-form-item label="Fecha tentativa de atención" prop="tentative_date">
+                        <el-date-picker
+                          style="width: 100%"
+                          v-model="form.tentative_date"
+                          type="datetime"
+                          placeholder="Selecciona una fecha y hora">
+                        </el-date-picker>
                       </el-form-item>
                     </el-col>
                   </el-row>
@@ -46,8 +56,12 @@
                                 <div slot="header" class="clearfix">
                                   <span><b>{{ product_user.product.name }}</b></span>
                                 </div>
-                                <p>última fecha de mantenimiento</p>
+                                <p style="color: #7F828B; font-size: 14px">Número de serie</p>
+                                <small>{{ product_user.serial_number }}</small>
+                                <br><br>
+                                <p style="color: #7F828B; font-size: 14px">Última fecha de mantenimiento</p>
                                 <b>{{ $convertDateToHuman(product_user.last_service) }}</b>
+                                <br><br>
                                 <p>Fecha de mantenimiento proxima</p>
                                 <b style="color: #5d3ce7">{{ $convertDateToHuman(product_user.next_service) }}</b>
                                 <br>
@@ -116,6 +130,10 @@
     },
     mounted() {
       this.init();
+      if (this.$auth.user.role === 'tecnico'){
+        this.form.technical_id = this.$auth.user.id;
+        this.isTechUser = true;
+      }
     },
     methods: {
       async init() {
@@ -174,6 +192,7 @@
     },
     data(){
       return {
+        isTechUser: false,
         clients: [],
         techs: [],
         products: [],
@@ -184,9 +203,14 @@
           technical_id: ""
         },
         rules: {
-
+          tentative_date:[
+            {required: true, message: "La fecha tentativa es obligatorio",  trigger:'blur'}
+          ],
+          technical_id: [
+            {required: true, message: "Asignar un tecnico es obligatorio",  trigger:'blur'}
+          ]
         }
       }
-    }
+    },
   }
 </script>

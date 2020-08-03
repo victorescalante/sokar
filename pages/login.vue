@@ -74,7 +74,7 @@ export default {
   }
 
   .box-card{
-    border-radius: 15px;
+    border-radius: 10px;
     padding: 20px 0px;
     background: white;
     z-index: 5;
@@ -84,14 +84,14 @@ export default {
     position: relative;
     width: 100%;
     height: 100vh;
-    background-image: url("~assets/images/login_bg.png");
-    background-size: cover;
+    // background-image: url("~assets/images/login_bg.png");
+    // background-size: cover;
   }
 
   .container::before{
     content: "";
     position: absolute;
-    background: linear-gradient(-45deg, #ee7752, #5d3ce7, #23a6d5, #23d5ab);
+    background: white;
     animation: gradient 15s ease infinite;
     background-size: 400% 400%;
     width: 100%;
@@ -129,6 +129,7 @@ export default {
     margin-left: -225px;
     top: 40%;
     margin-top: -225px;
+    border-radius: 10px;
   }
 
   @media (max-width: 600px) {

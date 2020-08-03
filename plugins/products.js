@@ -11,7 +11,7 @@ export default (context, inject) => {
     if (type === 'own'){
       return "Propio";
     }
-    return "Prestado";
+    return "Comodato";
   }
 
   inject('statusProduct', statusProduct)

@@ -11,7 +11,7 @@
             src="http://cdn.lowgif.com/full/14cd924518aed580-gif-avatar-11-gif-images-download.gif">
           </el-avatar>
           <p class="role">{{ $auth.$state.user.role }}</p>
-          <p class="name">{{ $auth.$state.user.name }}</p>
+          <p class="name" style="font-size: 12px">{{ $auth.$state.user.name }}</p>
           <div class="division_profile"></div>
         </div>
         <NavBar></NavBar>
