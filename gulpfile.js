@@ -5,7 +5,6 @@ var minimist = require('minimist');
 var args = minimist(process.argv.slice(2));
 
 gulp.task('deploy', async function() {
-  var remotePath = 'dist';
   var publicPath = '/public_html/';
   var conn = ftp.create({
     host: '192.232.238.157',
@@ -15,6 +14,6 @@ gulp.task('deploy', async function() {
   });
 
 gulp.src(['dist/**'], {buffer: false})
-  .pipe(conn.newer(remotePath))
+  .pipe(conn.newer(publicPath))
   .pipe(conn.dest(publicPath));
 });
