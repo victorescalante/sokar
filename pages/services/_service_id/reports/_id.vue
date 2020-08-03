@@ -231,6 +231,9 @@
         });
       }
     },
+    mounted() {
+      // montar datos
+    },
     async fetch(){
       await this.init();
     }

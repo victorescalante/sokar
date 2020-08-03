@@ -1,3 +1,4 @@
+require('dotenv').config();
 
 export default {
   mode: 'universal',
@@ -80,9 +81,9 @@ export default {
     strategies: {
       local: {
         endpoints: {
-          login: { url: 'http://23.23.191.60/api/'+'auth/login', method: 'post', propertyName: 'data.access_token' },
-          logout: { url: 'http://23.23.191.60/api/'+'auth/logout', method: 'post' },
-          user: { url: 'http://23.23.191.60/api/'+'auth/me', method: 'get', propertyName: 'data.user' }
+          login: { url: process.env.URL_RA_BACKEND +'auth/login', method: 'post', propertyName: 'data.access_token' },
+          logout: { url: process.env.URL_RA_BACKEND +'auth/logout', method: 'post' },
+          user: { url: process.env.URL_RA_BACKEND +'auth/me', method: 'get', propertyName: 'data.user' }
         },
         // tokenRequired: true,
         // tokenType: 'bearer',
