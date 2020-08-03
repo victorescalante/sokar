@@ -14,7 +14,7 @@ gulp.task('deploy', async function() {
     log: gutil.log
   });
 
-gulp.src(['dist/**'], {base: '.', buffer: false})
+gulp.src(['dist/**'], {base: './dist', buffer: false})
   .pipe(conn.newer(publicPath))
   .pipe(conn.dest(publicPath));
 });
