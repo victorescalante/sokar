@@ -10,10 +10,11 @@ gulp.task('deploy', async function() {
     host: '192.232.238.157',
     user: args.user,
     password: args.password,
+    parallel: 5,
     log: gutil.log
   });
 
-gulp.src(['dist/**'], {buffer: false})
+gulp.src(['dist/**'], {base: '.', buffer: false})
   .pipe(conn.newer(publicPath))
   .pipe(conn.dest(publicPath));
 });
