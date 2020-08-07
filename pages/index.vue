@@ -74,7 +74,7 @@
     middleware: ['auth'],
     head () {
       return {
-        title: 'Inicio',
+        title: 'Diken - Dashboard',
       }
     },
     data(){

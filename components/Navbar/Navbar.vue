@@ -1,5 +1,6 @@
 <template>
     <div class="Navbar">
+      <h1 class="title primary-color">Menú</h1>
       <el-menu
         class="el-menu-vertical"
       >
@@ -61,8 +62,27 @@
     };
 </script>
 
-<style>
+<style lang="scss">
   .el-menu-vertical a{
     cursor: pointer;
+  }
+
+  @media (max-width: 950px){
+
+    .el-menu-vertical a span{
+      font-size: 20px;
+    }
+
+    .Navbar{
+      ul{
+        text-align: left;
+      }
+      .title{
+        padding: 25px 20px;
+        text-align: left;
+      }
+    }
+
+
   }
 </style>
