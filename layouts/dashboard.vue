@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div>
+      {{ windowHeight }}
+    </div>
     <el-row class="tac">
       <el-col :sm="6" :md="5">
         <div class="custom-desktop" :class="{ active: openNav }">
@@ -17,7 +20,7 @@
               <div class="division_profile"></div>
             </div>
           </div>
-          <NavBar></NavBar>
+          <NavBar @clicked="onClickChild"></NavBar>
         </div>
       </el-col>
       <el-col :md="19" class="col-content">
@@ -45,9 +48,21 @@
       'NavBar': Navbar,
       'NavTop': Navtop
     },
+    methods: {
+      onClickChild () {
+        this.openNav = false;
+      }
+    },
+    mounted() {
+      this.windowHeight = window.innerHeight;
+      window.addEventListener('resize', () => {
+        this.windowHeight = window.innerHeight
+      })
+    },
     data(){
       return{
-        openNav: false
+        openNav: false,
+        windowHeight: 0
       }
     }
   }
@@ -146,14 +161,14 @@
 
   @media (max-width: 950px){
     .custom-desktop{
-      position: absolute;
+      position: fixed;
       background: white;
       width: 100%;
       height: 100vh;
       z-index: 10;
       text-align: center;
       left: -100%;
-      transition: all 1s ease-out;
+      transition: all .5s ease-out;
 
       &.active{
         left: 0px;
@@ -206,16 +221,18 @@
       bottom: 15px;
       right: 15px;
       opacity: .8;
+      transition: all .5s ease-in;
 
       .menu{
         &:before, &:after{
-          transition: all 1s ease-in;
+          transition: all .5s ease-in;
         }
       }
 
       &.open{
+        background: red;
         .menu{
-          background: darkblue;
+          background: red;
           &::before{
             transform: rotate(-45deg);
             top: auto;

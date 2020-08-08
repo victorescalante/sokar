@@ -3,7 +3,7 @@
 
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/clients' }">Clientes</el-breadcrumb-item>
-      <el-breadcrumb-item>Actualizar cliente</el-breadcrumb-item>
+      <el-breadcrumb-item>Detalle de cliente</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-row class="group-title">
@@ -15,7 +15,7 @@
     <el-row>
       <el-col :md="24">
         <div class="content-space">
-          <p>Información personal del usuario</p>
+          <p>Información del cliente</p>
         </div>
       </el-col>
       <el-form ref="formUser" :rules="rules" :model="form" class="form-style-curds">
@@ -24,12 +24,12 @@
             <el-input v-model="form.name" required></el-input>
           </el-form-item>
         </el-col>
-        <el-col :md="6">
+        <el-col :xs="12">
           <el-form-item label="Apellido Paterno" prop="last_name">
             <el-input v-model="form.last_name"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :md="6">
+        <el-col :xs="12">
           <el-form-item label="Apellido Materno" prop="second_last_name">
             <el-input v-model="form.second_last_name"></el-input>
           </el-form-item>
@@ -51,7 +51,7 @@
             </el-form-item>
           </el-tooltip>
         </el-col>
-        <el-col :md="24">
+        <el-col :md="24" v-if="$currentRole(['admin'])">
           <div class="content-space">
             <el-button type="primary"  @click="submitForm('formUser')">Actualizar cliente</el-button>
           </div>

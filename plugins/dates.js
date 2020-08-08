@@ -10,6 +10,14 @@ export default (context, inject) => {
     return moment(date).locale('es-mx').startOf('minutes').fromNow();
   }
 
+  const currentRole = function(array){
+    console.log(this.$auth.$state.user.role, array.includes(this.$auth.$state.user.role));
+    return array.includes(this.$auth.$state.user.role);
+  }
+
+  inject('currentRole', currentRole)
+  context.$currentRole = currentRole
+
   inject('convertDate', convertDate)
   context.$convertDate = convertDate
 

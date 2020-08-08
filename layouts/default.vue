@@ -65,4 +65,10 @@ html {
     left: 200px;
     color: white;
   }
+
+  @media (max-width: 950px){
+    .navbar-text{
+      font-size: 12px;
+    }
+  }
 </style>

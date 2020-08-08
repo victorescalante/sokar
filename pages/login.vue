@@ -126,7 +126,7 @@ export default {
     width: 400px;
     position: absolute;
     left: 50%;
-    margin-left: -225px;
+    margin-left: -200px;
     top: 40%;
     margin-top: -225px;
     border-radius: 10px;

@@ -7,37 +7,37 @@
         <nuxt-link to="/">
           <el-menu-item to="/" index="1">
               <i class="el-icon-house"></i>
-              <span>Home</span>
+              <span @click="onClickButton">Dashboard</span>
           </el-menu-item>
         </nuxt-link>
-        <nuxt-link to="/users" v-if="currentRole(['admin','asesor'])">
+        <nuxt-link to="/users" v-if="$currentRole(['admin','asesor'])">
           <el-menu-item index="2">
               <i class="el-icon-user"></i>
-              <span>Usuarios</span>
+              <span @click="onClickButton">Usuarios</span>
           </el-menu-item>
         </nuxt-link>
-        <nuxt-link to="/clients" v-if="currentRole(['admin','asesor', 'tecnico'])">
+        <nuxt-link to="/clients">
           <el-menu-item index="3">
             <i class="el-icon-user-solid"></i>
-            <span>Clientes</span>
+            <span @click="onClickButton">Clientes</span>
           </el-menu-item>
         </nuxt-link>
         <nuxt-link to="/repair">
           <el-menu-item index="4">
             <i class="el-icon-setting"></i>
-            <span>Refacciones</span>
+            <span @click="onClickButton">Refacciones</span>
           </el-menu-item>
         </nuxt-link>
         <nuxt-link to="/products">
           <el-menu-item index="5">
             <i class="el-icon-folder"></i>
-            <span>Equipos</span>
+            <span @click="onClickButton">Equipos</span>
           </el-menu-item>
         </nuxt-link>
         <nuxt-link to="/services">
           <el-menu-item index="6">
             <i class="el-icon-edit-outline"></i>
-            <span>Mantenimiento</span>
+            <span @click="onClickButton">Mantenimiento</span>
           </el-menu-item>
         </nuxt-link>
       </el-menu>
@@ -53,8 +53,8 @@
         }
       },
       methods: {
-        currentRole(array){
-          return array.includes(this.$auth.$state.user.role);
+        onClickButton (event) {
+          this.$emit('clicked')
         }
       },
       props:

@@ -14,45 +14,47 @@
       <div class="body-products">
         <el-row>
           <el-col :md="24">
-            <el-table
-              :data="data"
-              @row-click="HandleClickRow"
-              style="width: 100%">
-              <el-table-column
-                prop="serial_number"
-                label="Número de serie"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="product.name"
-                label="Nombre">
-              </el-table-column>
-              <el-table-column
-                label="Último mantenimiento">
-                <template slot-scope="scope">
-                  {{ $convertDate(scope.row.last_service) }}
-                </template>
-              </el-table-column>
-              <el-table-column
-                label="Proximo mantenimiento">
-                <template slot-scope="scope">
-                  {{ $convertDate(scope.row.next_service) }}
-                </template>
-              </el-table-column>
-              <el-table-column
-                label="Estatus">
-                <template slot-scope="scope">
-                  {{ getStatus(scope.row.status) }}
-                </template>
-              </el-table-column>
-            </el-table>
+            <div style="overflow-x: auto">
+              <el-table
+                :data="data"
+                @row-click="HandleClickRow"
+                style="width: 100%">
+                <el-table-column
+                  prop="serial_number"
+                  label="Número de serie"
+                >
+                </el-table-column>
+                <el-table-column
+                  prop="product.name"
+                  label="Nombre">
+                </el-table-column>
+                <el-table-column
+                  label="Último mantenimiento">
+                  <template slot-scope="scope">
+                    {{ $convertDate(scope.row.last_service) }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="Proximo mantenimiento">
+                  <template slot-scope="scope">
+                    {{ $convertDate(scope.row.next_service) }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="Estatus">
+                  <template slot-scope="scope">
+                    {{ getStatus(scope.row.status) }}
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
           </el-col>
         </el-row>
       </div>
       <el-dialog
         title="Asignar equipo a cliente"
         :visible.sync="openAddProduct"
-        width="30%">
+        width="50%">
         <el-row>
           <el-form class="mini-form-product" ref="formProduct" :rules="rules" :model="form">
             <el-col :md="24">
@@ -136,14 +138,6 @@
               return false;
             }
           });
-        },
-        getNameType(type){
-          if (type === 'own'){
-            return "Propio";
-          }
-          if (type === 'borrowed'){
-            return "Comodato";
-          }
         },
         getStatus(status){
           if (status){

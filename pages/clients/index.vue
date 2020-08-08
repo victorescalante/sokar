@@ -3,7 +3,12 @@
     <TableGeneral title="Administración de clientes">
 
       <div class="actions">
-        <el-button class="el-button--primary" icon="el-icon-plus" @click="dialogCreateClient = true">Crear cliente</el-button>
+        <el-button
+          class="el-button--primary"
+          icon="el-icon-plus"
+          @click="dialogCreateClient = true"
+          v-if="$currentRole(['admin'])"
+        >Crear cliente</el-button>
       </div>
 
       <div class="content">
