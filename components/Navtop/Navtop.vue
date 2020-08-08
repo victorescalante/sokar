@@ -9,7 +9,6 @@
       >
         <el-submenu index="1">
           <template slot="title">Hola, {{ $auth.$state.user.name }}</template>
-          <el-menu-item index="2-2">Configuración</el-menu-item>
           <el-menu-item index="2-3" @click="$auth.logout()">Salir</el-menu-item>
         </el-submenu>
       </el-menu>

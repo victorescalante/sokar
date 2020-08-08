@@ -11,22 +11,22 @@
         >Crear cliente</el-button>
       </div>
 
-      <div class="content">
+      <div class="content" style="overflow: auto">
         <el-table
           :data="data"
           stripe
           style="width: 100%">
           <el-table-column
             prop="name"
-            label="Nombre">
+            label="Nombre" width="200px">
           </el-table-column>
           <el-table-column
             prop="last_name"
-            label="Apellido">
+            label="Apellido" width="100px">
           </el-table-column>
           <el-table-column
             prop="email"
-            label="Correo electrónico">
+            label="Correo electrónico" width="250px">
           </el-table-column>
           <el-table-column
             prop="role"
@@ -34,16 +34,7 @@
           </el-table-column>
           <el-table-column
             prop="created_at"
-            label="Creado">
-          </el-table-column>
-          <el-table-column
-            fixed="right"
-            label="Operaciones">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)">Editar</el-button>
-            </template>
+            label="Creado" width="200px">
           </el-table-column>
         </el-table>
         <el-pagination

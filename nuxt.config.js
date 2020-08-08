@@ -75,7 +75,7 @@ export default {
       prefix: 'auth.',
       options: {
         path: '/',
-        maxAge: 3000
+        maxAge: 6000
       }
     },
     strategies: {

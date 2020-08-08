@@ -1,45 +1,52 @@
 <template>
     <div class="Navbar">
-      <h1 class="title primary-color">Menú</h1>
+      <h1 class="title primary-color hidden-sm-and-up">Menú</h1>
       <el-menu
         class="el-menu-vertical"
       >
+
         <nuxt-link to="/">
-          <el-menu-item to="/" index="1">
+          <el-menu-item index="1" @click="onClickButton">
               <i class="el-icon-house"></i>
-              <span @click="onClickButton">Dashboard</span>
+              <span>Dashboard</span>
           </el-menu-item>
         </nuxt-link>
+
         <nuxt-link to="/users" v-if="$currentRole(['admin','asesor'])">
-          <el-menu-item index="2">
+          <el-menu-item index="2" @click="onClickButton">
               <i class="el-icon-user"></i>
-              <span @click="onClickButton">Usuarios</span>
+              <span>Usuarios</span>
           </el-menu-item>
         </nuxt-link>
+
         <nuxt-link to="/clients">
-          <el-menu-item index="3">
+          <el-menu-item index="3" @click="onClickButton">
             <i class="el-icon-user-solid"></i>
             <span @click="onClickButton">Clientes</span>
           </el-menu-item>
         </nuxt-link>
+
         <nuxt-link to="/repair">
-          <el-menu-item index="4">
+          <el-menu-item index="4" @click="onClickButton">
             <i class="el-icon-setting"></i>
-            <span @click="onClickButton">Refacciones</span>
+            <span>Refacciones</span>
           </el-menu-item>
         </nuxt-link>
+
         <nuxt-link to="/products">
-          <el-menu-item index="5">
+          <el-menu-item index="5" @click="onClickButton">
             <i class="el-icon-folder"></i>
-            <span @click="onClickButton">Equipos</span>
+            <span>Equipos</span>
           </el-menu-item>
         </nuxt-link>
+
         <nuxt-link to="/services">
-          <el-menu-item index="6">
+          <el-menu-item index="6" @click="onClickButton">
             <i class="el-icon-edit-outline"></i>
-            <span @click="onClickButton">Mantenimiento</span>
+            <span>Mantenimiento</span>
           </el-menu-item>
         </nuxt-link>
+
       </el-menu>
     </div>
 </template>

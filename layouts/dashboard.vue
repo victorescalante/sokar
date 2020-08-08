@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div>
-      {{ windowHeight }}
-    </div>
     <el-row class="tac">
       <el-col :sm="6" :md="5">
         <div class="custom-desktop" :class="{ active: openNav }">
@@ -55,8 +52,10 @@
     },
     mounted() {
       this.windowHeight = window.innerHeight;
+      this.windowWidth = window.innerWidth;
       window.addEventListener('resize', () => {
         this.windowHeight = window.innerHeight
+        this.windowWidth = window.innerWidth
       })
     },
     data(){
