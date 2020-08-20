@@ -105,7 +105,7 @@
             this.$axios.put(process.env.URL_RA_BACKEND+'users/'+this.$route.params.id, this.form)
               .then(response => {
                 this.$notify({
-                  title: 'Success',
+                  title: 'Correcto',
                   message: 'El usuario fue actualizado correctamente',
                   type: 'success'
                 });

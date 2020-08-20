@@ -99,7 +99,6 @@
           this.deleteVisible = true;
         },
         async deleteUser(user_id) {
-          console.log(user_id);
           await this.$axios.$delete(process.env.URL_RA_BACKEND + 'users/' + user_id)
           this.deleteVisible = false;
           this.$notify({

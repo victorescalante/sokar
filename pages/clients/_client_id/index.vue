@@ -24,12 +24,12 @@
             <el-input v-model="form.name" required></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="12">
+        <el-col :xs="12" :md="6">
           <el-form-item label="Apellido Paterno" prop="last_name">
             <el-input v-model="form.last_name"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :xs="12">
+        <el-col :xs="12" :md="6">
           <el-form-item label="Apellido Materno" prop="second_last_name">
             <el-input v-model="form.second_last_name"></el-input>
           </el-form-item>
@@ -66,8 +66,8 @@
 </template>
 
 <script>
-  import TitleSection from "../../components/TitleSection/TitleSection";
-  import TableProducts from "../../components/products/TableProducts";
+  import TitleSection from "../../../components/TitleSection/TitleSection";
+  import TableProducts from "../../../components/products/TableProducts";
 
   export default {
     layout: 'dashboard',
@@ -103,8 +103,7 @@
       submitForm(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(this.form);
-            this.$axios.patch(process.env.URL_RA_BACKEND+'clients/'+this.$route.params.id, this.form)
+            this.$axios.patch(process.env.URL_RA_BACKEND+'clients/'+this.$route.params.client_id, this.form)
               .then(response => {
                 this.$notify({
                   title: 'Notificación',
@@ -123,19 +122,17 @@
         });
       },
       getUser() {
-        this.$axios.get(process.env.URL_RA_BACKEND + 'clients/' + this.$route.params.id)
+        this.$axios.get(process.env.URL_RA_BACKEND + 'clients/' + this.$route.params.client_id)
           .then(response => {
             this.form = response.data.data.user;
-            console.log('form ',this.form);
           }).catch(function (error) {
             console.log("error");
           });
       },
       getProducts(){
-        this.$axios.get(process.env.URL_RA_BACKEND + 'clients/' + this.$route.params.id + '/product-relation')
+        this.$axios.get(process.env.URL_RA_BACKEND + 'clients/' + this.$route.params.client_id + '/product-relation')
           .then(response => {
             this.products = response.data.data.rows;
-            console.log(this.products);
           }).catch(function (error) {
           console.log("error", error);
         });

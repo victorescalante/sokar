@@ -12,18 +12,6 @@
                 <el-form ref="formService" :rules="rules" :model="form" class="form-style-curds">
                   <el-row>
                     <el-col :md="8">
-                      <el-form-item label="Nombre del Cliente / Empresa" prop="client_id">
-                        <el-select filterable v-model="form.client_id" @change="getProductsOfClients" placeholder="Selecciona un cliente">
-                          <el-option
-                            v-for="client in clients"
-                            :key="client.id"
-                            :label="client.name"
-                            :value="client.id">
-                          </el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :md="8">
                       <el-form-item label="Nombre del Técnico" prop="technical_id">
                         <el-select v-model="form.technical_id" filterable placeholder="Selecciona un técnico" :disabled="isTechUser">
                           <el-option
@@ -36,6 +24,18 @@
                       </el-form-item>
                     </el-col>
                     <el-col :md="8">
+                      <el-form-item label="Nombre del Cliente / Empresa" prop="client_id">
+                        <el-select filterable v-model="form.client_id" @change="getProductsOfClients" placeholder="Selecciona un cliente">
+                          <el-option
+                            v-for="client in clients"
+                            :key="client.id"
+                            :label="client.name"
+                            :value="client.id">
+                          </el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="8">
                       <el-form-item label="Fecha tentativa de atención" prop="tentative_date">
                         <el-date-picker
                           style="width: 100%"
@@ -43,6 +43,27 @@
                           type="datetime"
                           placeholder="Selecciona una fecha y hora">
                         </el-date-picker>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="8">
+                      <el-form-item label="Tipo de mantenimiento">
+                        <el-select v-model="form.activity" placeholder="Selecciona el tipo de mantenimiento">
+                          <el-option label="Mantenimiento correctivo" value="corrective"></el-option>
+                          <el-option label="Mantenimiento preventivo" value="preventive"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="8">
+                      <el-form-item label="Tipo de servicio">
+                        <el-select v-model="form.type" @change="form.kms = 0" placeholder="Selecciona el tipo de servicio">
+                          <el-option label="Remoto" value="remote"></el-option>
+                          <el-option label="Presencial" value="face-to-face"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="8" v-if="form.type === 'face-to-face'">
+                      <el-form-item label="Distancia en kilometros">
+                        <el-input-number v-model="form.kms" :min="0" :max="1000"></el-input-number>
                       </el-form-item>
                     </el-col>
                   </el-row>
@@ -112,6 +133,7 @@
 <script>
 
   import TableGeneral from "../../components/tables/TableGeneral";
+  import moment from "moment";
 
   export default {
     layout: 'dashboard',
@@ -168,14 +190,14 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.form.tentative_date = moment(this.form.tentative_date).locale('es-mx').format('Y-M-D H:mm');
             this.$axios.post(process.env.URL_RA_BACKEND+'services', this.form)
               .then(response => {
                 this.$notify({
-                  title: 'Success',
+                  title: 'Correcto',
                   message: 'El servicio fue creado correctamente',
                   type: 'success'
                 });
-                console.log(response);
                 this.$router.push('/services/'+response.data.data.id);
               }).catch(function (error) {
               this.$notify.error({
@@ -200,7 +222,11 @@
         form: {
           product_user_ids: [],
           client_id: "",
-          technical_id: ""
+          technical_id: "",
+          tentative_date: "",
+          type: "face-to-face",
+          kms: 0,
+          activity: "corrective"
         },
         rules: {
           tentative_date:[

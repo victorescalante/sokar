@@ -21,15 +21,23 @@
         </div>
       </el-col>
       <el-col :md="19" class="col-content">
+
         <NavTop></NavTop>
-        <div class="float-nav" :class="{open: openNav}" @click="openNav=!openNav">
-          <div class="menu"></div>
-        </div>
+
         <div class="content-layout">
           <div class="real-content">
             <nuxt />
           </div>
         </div>
+
+        <!--float buttons -->
+        <div class="float-nav" :class="{open: openNav}" @click="openNav=!openNav">
+          <div class="menu"></div>
+        </div>
+
+        <div class="float-nav-return" @click="$router.back()"></div>
+        <!-- end float buttons -->
+
       </el-col>
     </el-row>
   </div>
@@ -106,6 +114,8 @@
 
   .real-content{
     background: white;
+    overflow-y: scroll;
+    height: 90vh;
     padding: 15px;
   }
 
@@ -206,6 +216,33 @@
           transform: rotate(-90deg);
           right: 0px;
         }
+      }
+    }
+
+    .float-nav-return {
+      display: block;
+      position: fixed;
+      width: 70px;
+      height: 70px;
+      border-radius: 50px;
+      background: green;
+      z-index: 10;
+      bottom: 15px;
+      left: 15px;
+      opacity: .8;
+      transition: all .5s ease-in;
+      cursor: pointer;
+
+      &:before{
+        position: absolute;
+        content: "\e6de";
+        font-family: element-icons !important;
+        top: 50%;
+        left: 50%;
+        margin-top: -25px;
+        margin-left: -25px;
+        font-size: 50px;
+        color: white;
       }
     }
 

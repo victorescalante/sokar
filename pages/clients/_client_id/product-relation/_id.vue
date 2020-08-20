@@ -1,6 +1,6 @@
 <template>
   <div class="details-product">
-    <h2>Detalle del producto</h2>
+    <h2>Detalle del equipo</h2>
     <br>
     <p>El detalle del producto contiene la información relacionada del producto.</p>
     <p v-if="$fetchState.pending" class="primary-color">Cargando datos del producto ...</p>
@@ -65,104 +65,108 @@
             </el-row>
           </el-card>
         </el-col>
-
       </el-row>
 
-      <el-row>
-        <el-col>
-          <h2>Formatos</h2>
-        </el-col>
-      </el-row>
 
       <el-row :gutter="15" class="formats">
-        <el-col :md="12">
-          <strong class="primary-color">Carta de recepción y liberación </strong>
-          <br><br>
-          <p>Revisa la información para la generación de la carta de recepción y liberación.</p>
-          <br>
-          <p><b>Equipo:</b> {{ product_user.product.name }}</p>
-          <br>
-          <p><b>Número de serie:</b> {{ product_user.serial_number }}</p>
-          <br>
-          <p><b>Subir carta de recepciín y liberación</b></p>
-          <br>
-          <div class="images-upload">
-            <el-upload
-              :action="upload.url"
-              :headers="upload.headers"
-              :data="saveFile('reception')"
-              :file-list="filterImagesByCategory('reception')"
-              list-type="picture-card"
-              :on-preview="handlePictureCardPreview"
-              :on-remove="handleRemove">
-              <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
-          </div>
-        </el-col>
-        <el-col :md="12">
-          <p><b>Marca las opciones que correspondan a la recepción:</b></p>
-          <br>
-          <el-form ref="form" :model="form" class="form-product">
-            <el-form-item>
-              <el-checkbox-group v-model="form.services" size="medium">
-                <el-checkbox label="Ayuda Visual" name="services"></el-checkbox>
-                <el-checkbox label="Manual de Equipo" name="services"></el-checkbox>
-                <el-checkbox label="Carta Garantia" name="services"></el-checkbox>
-                <el-checkbox label="Capacitación" name="services"></el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-            <el-form-item class="lineal-form" label="Prueba de funcionalidad">
-              <el-radio-group v-model="form.functionality">
-                <el-radio label="e">E</el-radio>
-                <el-radio label="b">B</el-radio>
-                <el-radio label="r">R</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item class="lineal-form" label="Prueba de espuma">
-              <el-radio-group v-model="form.foam">
-                <el-radio label="e">E</el-radio>
-                <el-radio label="b">B</el-radio>
-                <el-radio label="r">R</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="downloadFormatReception" plain>Generar formato de recepción</el-button>
-            </el-form-item>
-          </el-form>
-        </el-col>
+        <el-card>
+          <el-col :md="12">
+            <strong class="primary-color">Carta de recepción y liberación </strong>
+            <br><br>
+            <p>Revisa la información para la generación de la carta de recepción y liberación.</p>
+            <br>
+            <p><b>Equipo:</b> {{ product_user.product.name }}</p>
+            <br>
+            <p><b>Número de serie:</b> {{ product_user.serial_number }}</p>
+            <br>
+            <p><b>Subir carta de recepción y liberación</b></p>
+            <br>
+            <div class="images-upload">
+              <el-upload
+                :action="upload.url"
+                :headers="upload.headers"
+                :data="saveFile('reception')"
+                :file-list="filterImagesByCategory('reception')"
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
+            </div>
+          </el-col>
+          <el-col :md="12">
+            <br>
+            <p><b>Marca las opciones que correspondan a la recepción:</b></p>
+            <el-form ref="form" :model="form" class="form-product">
+              <el-row style="padding: 15px 0">
+                <el-col :xs="12" :md="12">
+                  <el-form-item>
+                    <el-checkbox-group v-model="form.services" size="medium">
+                      <el-checkbox label="Ayuda Visual" name="services"></el-checkbox>
+                      <el-checkbox label="Manual de Equipo" name="services"></el-checkbox>
+                      <el-checkbox label="Carta Garantia" name="services"></el-checkbox>
+                      <el-checkbox label="Capacitación" name="services"></el-checkbox>
+                    </el-checkbox-group>
+                  </el-form-item>
+                </el-col>
+                <el-col :xs="12" :md="12">
+                  <el-form-item class="lineal-form" label="Prueba de funcionalidad">
+                    <el-radio-group v-model="form.functionality">
+                      <el-radio label="e">E</el-radio>
+                      <el-radio label="b">B</el-radio>
+                      <el-radio label="r">R</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                  <el-form-item class="lineal-form" label="Prueba de espuma">
+                    <el-radio-group v-model="form.foam">
+                      <el-radio label="e">E</el-radio>
+                      <el-radio label="b">B</el-radio>
+                      <el-radio label="r">R</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-form-item>
+                <el-button type="primary" @click="downloadFormatReception" plain>Generar formato de recepción</el-button>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-card>
       </el-row>
 
       <el-row class="warranty">
-        <el-col :md="12">
-          <p class="text">A continuación si es necesario genera el formato de garantía para este equipo.</p>
-          <div class="c-button">
-            <el-button type="primary" @click="downloadFormatWarranty" plain>Generar formato de garantía</el-button>
-          </div>
-        </el-col>
-        <el-col :md="12">
-          <strong class="primary-color">Carta de recepción y liberación </strong>
-          <br><br>
-          <p><b>Subir garantía</b></p>
-          <br>
-          <div class="images-upload">
-            <el-upload
-              :action="upload.url"
-              :headers="upload.headers"
-              :data="saveFile('garantia')"
-              :file-list="filterImagesByCategory('garantia')"
-              list-type="picture-card"
-              :on-preview="handlePictureCardPreview"
-              :on-remove="handleRemove">
-              <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
-          </div>
-        </el-col>
+        <el-card style="padding: 15px 0">
+          <el-col :md="12">
+            <strong class="primary-color">Carta de recepción y liberación </strong>
+            <br><br>
+            <p><b>Subir garantía</b></p>
+            <br>
+            <div class="images-upload">
+              <el-upload
+                :action="upload.url"
+                :headers="upload.headers"
+                :data="saveFile('garantia')"
+                :file-list="filterImagesByCategory('garantia')"
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
+            </div>
+          </el-col>
+          <el-col :md="12">
+            <p class="text">Genera el formato de garantía para este equipo.</p>
+            <div style="padding: 15px 0">
+              <el-button type="primary" @click="downloadFormatWarranty" plain>Generar formato de garantía</el-button>
+            </div>
+          </el-col>
+        </el-card>
       </el-row>
 
     </div>
@@ -220,7 +224,6 @@
       },
       async handleRemove(file, fileList) {
         await this.$axios.$delete(process.env.URL_RA_BACKEND + 'files/' + file.id);
-        console.log(process.env.URL_RA_BACKEND + 'files/' + file.id);
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
@@ -262,6 +265,9 @@
 </script>
 
 <style lang="scss">
+  .images-upload{
+    padding: 15px 0;
+  }
   .details-product{
     .warranty{
       .text{

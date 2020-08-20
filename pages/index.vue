@@ -17,54 +17,6 @@
           </el-card>
         </el-col>
       </el-row>
-
-      <div v-if="this.$auth.user.role === 'tecnico'">
-        <p v-if="$fetchState.pending" class="primary-color">Cargando datos ...</p>
-        <el-row :gutter="15" class="board-tech" v-else>
-          <el-col :md="12">
-            <h3 class="primary-color">Actividades de la semana</h3>
-            <el-card class="box-card box-activity">
-              <el-table
-                :data="this.$auth.user.services.week"
-                style="width: 100%">
-                <el-table-column
-                  prop="id"
-                  label="Identificador"
-                  width="150" >
-                </el-table-column>
-                <el-table-column
-                  label="Fecha estimada">
-                  <template slot-scope="scope">
-                    {{ $convertDate(scope.row.tentative_date) }}
-                  </template>
-                </el-table-column>
-              </el-table>
-            </el-card>
-          </el-col>
-          <el-col :md="12">
-            <h3>Actividades del mes</h3>
-            <el-card class="box-card box-activity">
-              <el-table
-                :data="this.$auth.user.services.month"
-                style="width: 100%">
-                <el-table-column
-                  prop="id"
-                  label="Identificador"
-                  width="150"
-                >
-                </el-table-column>
-                <el-table-column
-                  label="Fecha estimada">
-                  <template slot-scope="scope">
-                    {{ $convertDate(scope.row.tentative_date) }}
-                  </template>
-                </el-table-column>
-              </el-table>
-            </el-card>
-          </el-col>
-        </el-row>
-      </div>
-
     </div>
 </template>
 

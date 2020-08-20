@@ -4,7 +4,7 @@
         <el-col :md="24">
           <h3>Administrar los equipos del cliente</h3>
           <br>
-          <el-button type="primary" plain @click="openAddProduct = true">Agregar equipo</el-button>
+          <el-button type="primary" plain @click="openAddProduct = true">Agregar equipo a cliente</el-button>
           <el-button type="info" v-if="data.length >= 1" plain @click="$router.push('/services/create')">Realizar mantenimiento</el-button>
         </el-col>
         <el-col :md="24">
@@ -12,41 +12,32 @@
         </el-col>
       </el-row>
       <div class="body-products">
-        <el-row>
-          <el-col :md="24">
-            <div style="overflow-x: auto">
-              <el-table
-                :data="data"
-                @row-click="HandleClickRow"
-                style="width: 100%">
-                <el-table-column
-                  prop="serial_number"
-                  label="Número de serie"
-                >
-                </el-table-column>
-                <el-table-column
-                  prop="product.name"
-                  label="Nombre">
-                </el-table-column>
-                <el-table-column
-                  label="Último mantenimiento">
-                  <template slot-scope="scope">
-                    {{ $convertDate(scope.row.last_service) }}
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  label="Proximo mantenimiento">
-                  <template slot-scope="scope">
-                    {{ $convertDate(scope.row.next_service) }}
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  label="Estatus">
-                  <template slot-scope="scope">
-                    {{ getStatus(scope.row.status) }}
-                  </template>
-                </el-table-column>
-              </el-table>
+        <el-row :gutter="15">
+          <el-col :xs="12" :md="8" v-for="relation in data" style="padding-top: 15px">
+            <div
+              class="product-card"
+              :class="checkDate(relation.next_service)"
+              @click="redirectRelation(relation.id)"
+            >
+                <el-row>
+                  <el-col :md="24">
+                    <p class="product_name">{{ relation.product.name }}</p>
+                    <p class="serial_number">{{ relation.serial_number }}</p>
+                  </el-col>
+                </el-row>
+                <el-row class="date">
+                  <el-col :md="24">
+                    <p>Última fecha de servicio</p>
+                    <span>{{ $convertDate(relation.last_service) }}</span>
+                  </el-col>
+                  <el-col :md="24">
+                    <p>Proxima fecha de servicio</p>
+                    <span>{{ $convertDate(relation.next_service) }}</span>
+                  </el-col>
+                </el-row>
+              <el-row>
+                <el-col :md="12" :offset="12"></el-col>
+              </el-row>
             </div>
           </el-col>
         </el-row>
@@ -54,9 +45,9 @@
       <el-dialog
         title="Asignar equipo a cliente"
         :visible.sync="openAddProduct"
-        width="50%">
+        :width="$getWidthModal(windowWidth)">
         <el-row>
-          <el-form class="mini-form-product" ref="formProduct" :rules="rules" :model="form">
+          <el-form class="mini-form-product" ref="formProduct" :model="form">
             <el-col :md="24">
               <el-form-item label="Tipo de Equipo">
                 <el-select v-model="form.product_type" placeholder="Selecciona el tipo de equipo">
@@ -98,6 +89,7 @@
       props: ['data', 'color'],
       data() {
         return {
+          windowWidth: 0,
           openAddProduct: false,
           products: [],
           form: {
@@ -107,49 +99,98 @@
           }
         }
       },
+      mounted() {
+        this.windowWidth = window.innerWidth;
+        window.addEventListener('resize', () => {
+          this.windowWidth = window.innerWidth
+        })
+      },
       async fetch(){
         let products = await this.$axios.$get(process.env.URL_RA_BACKEND+'products');
         this.products = products.data.rows;
       },
       methods: {
-        HandleClickRow(row, column, event){
-          this.$router.push('/clients/'+this.$route.params.id+'/product-relation/'+row.id);
+        redirectRelation(relation_id){
+          this.$router.push('/clients/'+this.$route.params.client_id+'/product-relation/'+relation_id);
+        },
+        checkDate(date){
+
+          let next_service = new Date(date).getTime();
+          let now = Date.now();
+          let time = now-next_service;
+
+          if (time >= 0){
+            return 'danger';
+          }
+          return '';
         },
         submitForm(formName) {
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              this.$axios.post(process.env.URL_RA_BACKEND+'clients/'+this.$route.params.id+'/product-relation', this.form)
+              this.$axios.post(process.env.URL_RA_BACKEND+'clients/'+this.$route.params.client_id+'/product-relation', this.form)
                 .then(response => {
                   this.$notify({
-                    title: 'Success',
+                    title: 'Correcto',
                     message: 'El producto fue asignado correctamente',
                     type: 'success'
                   });
                   let data = response.data.data.user_product;
-                  this.$router.push('/clients/'+this.$route.params.id+'/product-relation/'+data.id);
+                  this.$router.push('/clients/'+this.$route.params.client_id+'/product-relation/'+data.id);
                 }).catch(function (error) {
-                this.$notify.error({
-                  title: 'Error',
-                  message: 'El servicio no ha posido ser creado'
-                });
+                console.log('El servicio no ha posido ser creado');
               });
 
             } else {
               return false;
             }
           });
-        },
-        getStatus(status){
-          if (status){
-            return "Activo";
-          }
-          return "Inactivo";
         }
       }
     }
 </script>
 
 <style lang="scss">
+
+  $base-color: #2d9c03;
+  $base-cancelled: #3c5fe0;
+  $base-danger: #d90e0e;
+
+  .product-card{
+    &.cancel{
+      border: $base-cancelled solid 1px;
+      .product_name{
+        color: $base-cancelled;
+      }
+    }
+
+    &.danger{
+      border: $base-danger solid 1px;
+      .product_name{
+        color: $base-danger;
+      }
+    }
+
+    cursor: pointer;
+    padding: 15px;
+    border: $base-color solid 1px;
+    border-radius: 10px;
+    text-align: center;
+    .date{
+      font-size: 12px;
+      p{
+        font-weight: bold;
+      }
+    }
+    .serial_number{
+      font-size: 10px;
+    }
+    .product_name{
+      color: $base-color;
+      font-weight: bold;
+      padding: 0px;
+    }
+  }
+
   .mini-form-product{
     label{
       display: block;

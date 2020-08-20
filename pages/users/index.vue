@@ -185,7 +185,7 @@
               .then(response => {
                 this.data.push(response.data.data.user);
                 this.$notify({
-                  title: 'Success',
+                  title: 'Correcto',
                   message: 'El usuario fue creado correctamente',
                   type: 'success'
                 });

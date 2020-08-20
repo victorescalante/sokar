@@ -1,6 +1,9 @@
 <template>
     <div class="Navbar">
-      <h1 class="title primary-color hidden-sm-and-up">Menú</h1>
+      <div class="only-tablet">
+        <h1 class="title primary-color ">Menú</h1>
+      </div>
+
       <el-menu
         class="el-menu-vertical"
       >
@@ -44,6 +47,13 @@
           <el-menu-item index="6" @click="onClickButton">
             <i class="el-icon-edit-outline"></i>
             <span>Mantenimiento</span>
+          </el-menu-item>
+        </nuxt-link>
+
+        <nuxt-link to="/plan" v-if="$currentRole(['tecnico'])">
+          <el-menu-item index="7" @click="onClickButton">
+            <i class="el-icon-notebook-1"></i>
+            <span>Plan de trabajo</span>
           </el-menu-item>
         </nuxt-link>
 

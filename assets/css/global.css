@@ -47,3 +47,14 @@ Override
 .primary-color{
   color: rgba(25, 137, 250, 1);
 }
+
+.only-tablet{
+  display: none;
+}
+
+@media (max-width: 950px){
+  .only-tablet{
+    display: block;
+  }
+}
+

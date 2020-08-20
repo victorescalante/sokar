@@ -15,37 +15,43 @@
         <el-table
           :data="data"
           stripe
-          style="width: 100%">
+          style="width: 100%" @row-click="HandleClickRow">
+          <el-table-column
+            prop="id"
+            label="ID" min-width="50px">
+          </el-table-column>
           <el-table-column
             prop="name"
-            label="Nombre" width="200px">
+            label="Nombre" min-width="200px">
           </el-table-column>
           <el-table-column
             prop="last_name"
-            label="Apellido" width="100px">
+            label="Apellido" min-width="100px">
           </el-table-column>
           <el-table-column
             prop="email"
-            label="Correo electrónico" width="250px">
+            label="Correo electrónico" min-width="250px">
           </el-table-column>
           <el-table-column
             prop="role"
-            label="Rol">
+            label="Rol" min-width="100px">
           </el-table-column>
           <el-table-column
             prop="created_at"
-            label="Creado" width="200px">
+            label="Creado" min-width="200px">
           </el-table-column>
         </el-table>
-        <el-pagination
-          class="custom-paginator"
-          @size-change="handleSizeChange"
-          @current-change="HandleCurrentPage"
-          :page-sizes="[50, 100, 200]"
-          :page-size="50"
-          layout="sizes, prev, pager, next"
-          :total="total_data">
-        </el-pagination>
+        <div style="text-align: center">
+          <el-pagination
+            class="custom-paginator"
+            @size-change="handleSizeChange"
+            @current-change="HandleCurrentPage"
+            :page-sizes="[50, 100, 200]"
+            :page-size="50"
+            layout="sizes, prev, pager, next"
+            :total="total_data">
+          </el-pagination>
+        </div>
       </div>
     </TableGeneral>
 
@@ -101,7 +107,6 @@
         <el-button type="primary" @click="submitForm('formUser')">Crear cliente</el-button>
       </span>
     </el-dialog>
-
     <!-- End Dialogs -->
 
 
@@ -152,6 +157,9 @@
       }
     },
     methods: {
+      HandleClickRow(row, column, event){
+        this.$router.push('/clients/'+row.id);
+      },
       async handleSizeChange(size) {
         this.paginator.limit = size;
         let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'clients', {
@@ -187,7 +195,7 @@
               .then(response => {
                 this.data.push(response.data.data.user);
                 this.$notify({
-                  title: 'Success',
+                  title: 'Correcto',
                   message: 'El cliente fue creado correctamente',
                   type: 'success'
                 });

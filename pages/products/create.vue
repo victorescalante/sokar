@@ -130,7 +130,7 @@
             this.$axios.post(process.env.URL_RA_BACKEND+'users', this.form)
               .then(response => {
                 this.$notify({
-                  title: 'Success',
+                  title: 'Correcto',
                   message: 'El cliente fue creado correctamente',
                   type: 'success'
                 });

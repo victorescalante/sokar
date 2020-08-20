@@ -208,12 +208,11 @@
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
-          console.log(valid);
           if (valid) {
             this.$axios.patch(process.env.URL_RA_BACKEND + 'services/'+this.$route.params.service_id+'/reports/'+this.$route.params.id, this.report)
               .then(response => {
                 this.$notify({
-                  title: 'Success',
+                  title: 'Correcto',
                   message: 'El reporte ha sido actualizado',
                   type: 'success'
                 });

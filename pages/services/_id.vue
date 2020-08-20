@@ -12,18 +12,6 @@
                 <el-form ref="formService" :rules="rules" :model="form" class="form-style-curds">
                   <el-row>
                     <el-col :md="8">
-                      <el-form-item label="Nombre del Cliente / Empresa" prop="client_id">
-                        <el-select filterable v-model="form.client_id" placeholder="Selecciona un cliente" disabled>
-                          <el-option
-                            v-for="client in clients"
-                            :key="client.id"
-                            :label="client.name"
-                            :value="client.id">
-                          </el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :md="8">
                       <el-form-item label="Nombre del Técnico" prop="technical_id">
                         <el-select v-model="form.technical_id" placeholder="Selecciona un técnico" disabled>
                           <el-option
@@ -31,6 +19,18 @@
                             :key="tech.id"
                             :label="tech.name"
                             :value="tech.id">
+                          </el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="8">
+                      <el-form-item label="Nombre del Cliente / Empresa" prop="client_id">
+                        <el-select filterable v-model="form.client_id" placeholder="Selecciona un cliente" disabled>
+                          <el-option
+                            v-for="client in clients"
+                            :key="client.id"
+                            :label="client.name"
+                            :value="client.id">
                           </el-option>
                         </el-select>
                       </el-form-item>
@@ -44,6 +44,30 @@
                           type="datetime"
                           placeholder="Selecciona una fecha y hora">
                         </el-date-picker>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="8">
+                      <el-form-item label="Tipo de mantenimiento">
+                        <el-select v-model="form.activity" placeholder="Selecciona el tipo de mantenimiento">
+                          <el-option label="Mantenimiento correctivo" value="corrective"></el-option>
+                          <el-option label="Mantenimiento preventivo" value="preventive"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="8">
+                      <el-form-item label="Tipo de servicio">
+                        <el-select
+                          v-model="form.type"
+                          @change="form.kms = 0; UpdateService();"
+                          placeholder="Selecciona el tipo de servicio">
+                          <el-option label="Remoto" value="remote"></el-option>
+                          <el-option label="Presencial" value="face-to-face"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="8" v-if="form.type === 'face-to-face'">
+                      <el-form-item label="Distancia en kilometros">
+                        <el-input-number v-model="form.kms" :min="0" :max="1000" @change="UpdateService"></el-input-number>
                       </el-form-item>
                     </el-col>
                   </el-row>
@@ -185,6 +209,7 @@
   import TitleSection from "../../components/TitleSection/TitleSection";
   import TableGeneral from "../../components/tables/TableGeneral";
   import _ from 'lodash';
+  import moment from "moment";
 
   export default {
     layout: 'dashboard',
@@ -226,7 +251,10 @@
           product_user_ids: [],
           client_id: "",
           technical_id: "",
-          tentative_date: ""
+          tentative_date: "",
+          type: "",
+          kms: "",
+          activity: ""
         },
         rules: {
 
@@ -235,7 +263,8 @@
     },
     methods: {
       async UpdateService() {
-        let service = await this.$axios.$patch(process.env.URL_RA_BACKEND + 'services/' + this.$route.params.id, this.form);
+        this.form.tentative_date = moment(this.form.tentative_date).locale('es-mx').format('Y-M-D H:mm');
+        await this.$axios.$patch(process.env.URL_RA_BACKEND + 'services/' + this.$route.params.id, this.form);
         this.$notify({
           title: 'Servicio actualizado',
           message: 'Servicio actualizado correctamente.',
@@ -256,6 +285,9 @@
         this.form.client_id = service.data.service.client_id;
         this.form.technical_id = service.data.service.technical_id;
         this.form.tentative_date = service.data.service.tentative_date;
+        this.form.type = service.data.service.type;
+        this.form.kms = service.data.service.kms;
+        this.form.activity = service.data.service.activity;
         this.form.product_user_ids = _.map(service.data.service.reports, function (report) {
           return report.product_user.product.id;
         })

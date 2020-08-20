@@ -152,7 +152,6 @@
       },
       handleView(index, row){
         this.viewData = row;
-        console.log(row);
         this.viewDetail = true;
       },
       defineProgress(progress){

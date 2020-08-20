@@ -43,7 +43,6 @@ export default {
     async login() {
       try {
         let response = await this.$auth.loginWith('local', { data: this.form })
-        console.log(response)
       } catch (err) {
         this.$message('Credenciales de acceso incorrectas');
       }
