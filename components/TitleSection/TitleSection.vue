@@ -13,7 +13,7 @@
 <style>
   .TitleSection{
     color: #409EFF;
-    padding: 25px 0px;
+    padding: 25px 15px;
     text-transform: uppercase;
   }
 </style>

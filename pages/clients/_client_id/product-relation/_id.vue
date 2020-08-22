@@ -83,7 +83,9 @@
             <br>
             <div class="images-upload">
               <el-upload
+                accept="image/png, image/jpeg"
                 :action="upload.url"
+                :multiple="true"
                 :headers="upload.headers"
                 :data="saveFile('reception')"
                 :file-list="filterImagesByCategory('reception')"
@@ -102,7 +104,7 @@
             <p><b>Marca las opciones que correspondan a la recepción:</b></p>
             <el-form ref="form" :model="form" class="form-product">
               <el-row style="padding: 15px 0">
-                <el-col :xs="12" :md="12">
+                <el-col :xs="24" :md="24">
                   <el-form-item>
                     <el-checkbox-group v-model="form.services" size="medium">
                       <el-checkbox label="Ayuda Visual" name="services"></el-checkbox>
@@ -112,19 +114,19 @@
                     </el-checkbox-group>
                   </el-form-item>
                 </el-col>
-                <el-col :xs="12" :md="12">
+                <el-col :xs="24" :md="24">
                   <el-form-item class="lineal-form" label="Prueba de funcionalidad">
                     <el-radio-group v-model="form.functionality">
-                      <el-radio label="e">E</el-radio>
-                      <el-radio label="b">B</el-radio>
-                      <el-radio label="r">R</el-radio>
+                      <el-radio label="e">Excelente</el-radio>
+                      <el-radio label="b">Bueno</el-radio>
+                      <el-radio label="r">Regular</el-radio>
                     </el-radio-group>
                   </el-form-item>
                   <el-form-item class="lineal-form" label="Prueba de espuma">
                     <el-radio-group v-model="form.foam">
-                      <el-radio label="e">E</el-radio>
-                      <el-radio label="b">B</el-radio>
-                      <el-radio label="r">R</el-radio>
+                      <el-radio label="e">Excelente</el-radio>
+                      <el-radio label="b">Bueno</el-radio>
+                      <el-radio label="r">Regular</el-radio>
                     </el-radio-group>
                   </el-form-item>
                 </el-col>
@@ -140,14 +142,16 @@
       <el-row class="warranty">
         <el-card style="padding: 15px 0">
           <el-col :md="12">
-            <strong class="primary-color">Carta de recepción y liberación </strong>
+            <strong class="primary-color">Formato de garantía </strong>
             <br><br>
             <p><b>Subir garantía</b></p>
             <br>
             <div class="images-upload">
               <el-upload
+                accept="image/png, image/jpeg"
                 :action="upload.url"
                 :headers="upload.headers"
+                :multiple="true"
                 :data="saveFile('garantia')"
                 :file-list="filterImagesByCategory('garantia')"
                 list-type="picture-card"

@@ -120,7 +120,7 @@
                   message: 'El usuario fue actualizado correctamente',
                   type: 'success'
                 });
-              }).catch(function (error) {
+              }).catch(error => {
               this.$notify.error({
                 title: 'Error',
                 message: 'El usuario no ha posido ser actualizado'
@@ -135,7 +135,7 @@
         this.$axios.get(process.env.URL_RA_BACKEND + 'users/' + this.$route.params.id)
           .then(response => {
             this.form = response.data.data.user;
-          }).catch(function (error) {
+          }).catch(error => {
           console.log("error");
           });
       }

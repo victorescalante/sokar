@@ -40,7 +40,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :md="8">
-                  <el-form-item label="Fecha de inicio" prop="service_end">
+                  <el-form-item label="Fecha de termino" prop="service_end">
                     <el-date-picker type="date" placeholder="Aún no es asignada la fecha de termino" v-model="report.service_end" style="width: 100%;"></el-date-picker>
                   </el-form-item>
                 </el-col>
@@ -120,7 +120,33 @@
               </el-row>
               <el-row>
                 <el-col :md="24">
-                  <el-button type="primary" @click="submitForm('reportForm')">Actualizar reporte</el-button>
+                  <h3 style="padding: 20px 0">Adjuntar evidencía</h3>
+                </el-col>
+                <el-col :md="24">
+                  <div class="images-upload">
+                    <el-upload
+                      accept="image/png, image/jpeg"
+                      :action="upload.url"
+                      :multiple="true"
+                      :headers="upload.headers"
+                      :data="saveFile('report')"
+                      :file-list="filterImagesByCategory('report')"
+                      list-type="picture-card"
+                      :on-preview="handlePictureCardPreview"
+                      :on-remove="handleRemove">
+                      <i class="el-icon-plus"></i>
+                    </el-upload>
+                    <el-dialog :visible.sync="dialogVisible">
+                      <img width="100%" :src="dialogImageUrl" alt="">
+                    </el-dialog>
+                  </div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :md="24">
+                  <div style="padding: 25px 0;">
+                    <el-button type="primary" @click="submitForm('reportForm')">Actualizar reporte</el-button>
+                  </div>
                 </el-col>
               </el-row>
             </el-card>
@@ -145,6 +171,7 @@
 <script>
   import TitleSection from "../../../../components/TitleSection/TitleSection";
   import TableGeneral from "../../../../components/tables/TableGeneral";
+  import _ from "lodash";
 
   export default {
     layout: 'dashboard',
@@ -167,6 +194,19 @@
         notUpdate: false,
         catalog_repairs: [],
         report:{},
+        dialogImageUrl: '',
+        dialogVisible: false,
+        upload: {
+          url: process.env.URL_RA_BACKEND+'files',
+          headers: {
+            'Authorization': this.$auth.getToken('local')
+          },
+          data: {
+            model_id: '',
+            model: 0
+          },
+          list: []
+        },
         rules: {
           costs: [
             {required: true, message: "Ingresa un costo", trigger: 'blur'}
@@ -175,16 +215,22 @@
       }
     },
     methods: {
-      validAttribute(type, value){
-        let error = '';
-        if (type === 'text'){
-          if (value.length <= 0){
-            this.notUpdate = true;
-            return error = "Agrega una descripción";
-          }else{
-            this.notUpdate = false;
-          }
+      saveFile(category){
+        return {
+          category: category,
+          model_id: this.upload.data.model_id,
+          model: this.upload.data.model
         }
+      },
+      filterImagesByCategory(category){
+        return _.filter(this.upload.list, {'category': category})
+      },
+      async handleRemove(file, fileList) {
+        await this.$axios.$delete(process.env.URL_RA_BACKEND + 'files/' + file.id);
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
       },
       AddExtraCost(){
         this.report.costs.unshift({
@@ -205,6 +251,16 @@
         let repairs = await this.$axios.$get(process.env.URL_RA_BACKEND + 'repairs/?limit=350&order_by=name');
         this.catalog_repairs = await repairs.data.rows;
         this.report = await data.data.report;
+        this.upload.data.model = data.data.report.model;
+        this.upload.data.model_id = data.data.report.id;
+        this.upload.list = _.map(data.data.report.files, function (file) {
+          return {
+            name: "name",
+            url: file.url,
+            id: file.id,
+            category: file.category
+          }
+        })
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -217,7 +273,7 @@
                   type: 'success'
                 });
                 this.report = response.data.data.report;
-              }).catch(function (error) {
+              }).catch(error => {
               this.$notify.error({
                 title: 'Error',
                 message: 'El reporte no ha podido ser actualizado'

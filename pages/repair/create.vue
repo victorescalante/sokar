@@ -135,7 +135,7 @@
                   type: 'success'
                 });
                 this.$router.push('/clients');
-              }).catch(function (error) {
+              }).catch(error => {
               this.$notify.error({
                 title: 'Error',
                 message: 'El cliente no ha posido ser creado'

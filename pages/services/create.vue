@@ -199,7 +199,7 @@
                   type: 'success'
                 });
                 this.$router.push('/services/'+response.data.data.id);
-              }).catch(function (error) {
+              }).catch(error => {
               this.$notify.error({
                 title: 'Error',
                 message: 'El servicio no ha posido ser creado'

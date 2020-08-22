@@ -191,7 +191,7 @@
                 });
                 this.dialogCreateUser = false;
                 this.resetForm('formUser');
-              }).catch(function (error) {
+              }).catch(error => {
               this.$notify.error({
                 title: 'Error',
                 message: 'El usuario no ha posido ser creado'

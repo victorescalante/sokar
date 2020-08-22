@@ -63,42 +63,62 @@
       width="50%">
 
       <el-row>
-        <el-col :md="24">
-          <div class="content-space">
-            <p>Información personal del cliente</p>
-          </div>
-        </el-col>
         <el-form ref="formUser" :rules="rules" :model="form" class="form-style-curds">
-          <el-col :md="8">
-            <el-form-item label="Nombre completo" prop="name">
-              <el-input v-model="form.name" required></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :md="8">
-            <el-form-item label="Apellido Paterno" prop="last_name">
-              <el-input v-model="form.last_name"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :md="8">
-            <el-form-item label="Apellido Materno" prop="second_last_name">
-              <el-input v-model="form.second_last_name"></el-input>
-            </el-form-item>
-          </el-col>
           <el-col :md="24">
             <div class="content-space">
-              <p>Datos de acceso a la plataforma para el cliente</p>
+              <b>Información de la empresa</b>
             </div>
           </el-col>
-          <el-col :md="8">
-            <el-form-item label="Correo electrónico" prop="email">
-              <el-input v-model="form.email"></el-input>
-            </el-form-item>
+          <el-row>
+            <el-col :md="8">
+              <el-form-item label="Razón social" prop="business_name">
+                <el-input v-model="form.business_name"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="8">
+              <el-form-item label="RFC" prop="rfc">
+                <el-input v-model="form.rfc"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="8">
+              <el-form-item label="Nombre de la empresa" prop="company_name">
+                <el-input v-model="form.company_name"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-col :md="24">
+            <div class="content-space">
+              <b>Datos de acceso a la plataforma</b>
+            </div>
           </el-col>
-          <el-col :md="8">
-            <el-form-item label="Contraseña" prop="password">
-              <el-input type="password" v-model="form.password"></el-input>
-            </el-form-item>
-          </el-col>
+          <el-row>
+            <el-col :md="8">
+              <el-form-item label="Nombre completo" prop="name">
+                <el-input v-model="form.name" required></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="8">
+              <el-form-item label="Apellido Paterno" prop="last_name">
+                <el-input v-model="form.last_name"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="8">
+              <el-form-item label="Apellido Materno" prop="second_last_name">
+                <el-input v-model="form.second_last_name"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="8">
+              <el-form-item label="Correo electrónico" prop="email">
+                <el-input v-model="form.email"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="8">
+              <el-form-item label="Contraseña" prop="password">
+                <el-input type="password" v-model="form.password"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
         </el-form>
       </el-row>
 
@@ -146,13 +166,17 @@
           second_last_name: '',
           email: '',
           password: '',
-          role: 'cliente'
+          role: 'cliente',
+          business_name: '',
+          rfc: '',
+          company_name: ''
         },
         rules: {
           name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],
           last_name: [{required: true, message: 'Agrega apellido', trigger: 'blur'}],
           email: [{required: true, message: 'Agrega un correo', trigger: 'blur'}],
-          password: [{required: true, message: 'Agrega una contraseña', trigger: 'blur'}]
+          password: [{required: true, message: 'Agrega una contraseña', trigger: 'blur'}],
+          company_name: [{required: true, message: 'Agrega el nombre de la empresa', trigger: 'blur'}]
         }
       }
     },
@@ -201,7 +225,7 @@
                 });
                 this.dialogCreateClient = false;
                 this.resetForm('formUser');
-              }).catch(function (error) {
+              }).catch(error => {
               this.$notify.error({
                 title: 'Error',
                 message: 'El cliente no ha posido ser creado'

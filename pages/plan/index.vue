@@ -1,12 +1,16 @@
 <template>
   <div>
-
     <el-row :gutter="15">
-      <el-col :xs="12">
+      <el-col :xs="12" :md="24">
         <h2 class="primary-color">Plan de trabajo</h2>
         <p>{{$convertDate(now)}}</p>
       </el-col>
-      <el-col :xs="12">
+    </el-row>
+    <el-row style="padding: 25px 0">
+      <el-col :xs="12" :md="12">
+        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="addTodo">Agregar Actividad</el-button>
+      </el-col>
+      <el-col :xs="12" :md="12">
         <div style="text-align: right">
           <el-date-picker
             format="d/M/yyyy"
@@ -16,12 +20,13 @@
           </el-date-picker>
         </div>
       </el-col>
+    </el-row>
+    <el-row :gutter="25">
       <el-col :xs="24" :md="12">
         <h3 style="padding-top: 25px">Hoy <span style="font-size: 12px">({{ $convertDate(now) }})</span></h3>
         <el-card class="el-card-custom">
           <div slot="header" class="clearfix">
             <span>Plan de trabajo del día</span>
-            <el-button style="float: right; padding: 3px 0" type="text" @click="addTodo">Agregar actividad</el-button>
           </div>
           <Tasks :tasks="todo_day" v-if="todo_day.length > 0"></Tasks>
           <div style="text-align: center" v-else>
@@ -35,7 +40,7 @@
         <el-card class="el-card-custom">
           <div slot="header" class="clearfix">
             <span>Plan de trabajo de la semana</span>
-            <el-button style="float: right; padding: 3px 0" type="text" @click="addTodo">Agregar actividad</el-button>
+            <el-button style="float: right; padding: 3px 0" type="text" @click="DownloadPlanWeek">Descargar el plan semanal</el-button>
           </div>
           <div style="text-align: center" v-if="isEmpty(activities_by_week)">
             <p>No hay actividades</p>
@@ -47,7 +52,6 @@
         </el-card>
       </el-col>
     </el-row>
-
     <el-dialog
       title="Programar actividad"
       :visible.sync="viewFormTodo"
@@ -123,6 +127,7 @@
 <script>
   import moment from "moment";
   import _ from "lodash";
+  import download from 'downloadjs';
   import Tasks from "../../components/Tasks";
 
   export default {
@@ -151,11 +156,23 @@
           kms: 0,
           client_id: 2,
           status: "open",
-          date: moment(this.now).locale('es-mx').format('Y-M-D H:mm')
+          date: ''
         }
       }
     },
     methods: {
+      async DownloadPlanWeek() {
+        let start_week = moment(this.now).locale('es-mx').startOf('week').format('YYYY-MM-DD');
+        let end_week = moment(this.now).locale('es-mx').endOf('week').format('YYYY-MM-DD');
+
+        let data = {
+          start_week: start_week,
+          end_week: end_week
+        }
+
+        let response = await this.$axios.$post(process.env.URL_RA_BACKEND + 'download/file/plan_week', data);
+        download(atob(response), 'plan.pdf', 'application/pdf')
+      },
       isEmpty(obj) {
         for(let key in obj) {
           if(obj.hasOwnProperty(key))
@@ -176,12 +193,12 @@
               .then(response => {
                 this.$notify({
                   title: 'Correcto',
-                  message: 'La tarea fue creado correctamente',
+                  message: 'La tarea fue creada correctamente',
                   type: 'success'
                 });
                 this.viewFormTodo = false
                 this.getTodo();
-              }).catch(function (error) {
+              }).catch(error => {
               this.$notify.error({
                 title: 'Error',
                 message: 'La tarea no pudo ser creada'

@@ -8,7 +8,7 @@
           <el-button type="info" v-if="data.length >= 1" plain @click="$router.push('/services/create')">Realizar mantenimiento</el-button>
         </el-col>
         <el-col :md="24">
-          <p><strong>Número de serie:</strong> El número de serie es asignado al momento de agregar un producto del catálogo al cliente.</p>
+          <p style="padding: 25px 0"><strong>Número de serie:</strong> El número de serie es asignado al momento de agregar un producto del catálogo al cliente.</p>
         </el-col>
       </el-row>
       <div class="body-products">
@@ -46,7 +46,7 @@
         title="Asignar equipo a cliente"
         :visible.sync="openAddProduct"
         :width="$getWidthModal(windowWidth)">
-        <el-row>
+        <el-row v-loading="loadingProduct">
           <el-form class="mini-form-product" ref="formProduct" :model="form">
             <el-col :md="24">
               <el-form-item label="Tipo de Equipo">
@@ -71,7 +71,7 @@
             <el-col :md="24">
               <div class="content-space" style="text-align: right">
                 <el-button type="info" @click="openAddProduct = false">Cancelar</el-button>
-                <el-button type="primary" @click="submitForm('formProduct')">Asignar producto</el-button>
+                <el-button type="primary" @click.stop="submitForm('formProduct')">Asignar producto</el-button>
               </div>
             </el-col>
           </el-form>
@@ -89,6 +89,7 @@
       props: ['data', 'color'],
       data() {
         return {
+          loadingProduct: false,
           windowWidth: 0,
           openAddProduct: false,
           products: [],
@@ -106,10 +107,13 @@
         })
       },
       async fetch(){
-        let products = await this.$axios.$get(process.env.URL_RA_BACKEND+'products');
-        this.products = products.data.rows;
+        await this.getProducts();
       },
       methods: {
+        async getProducts(){
+          let products = await this.$axios.$get(process.env.URL_RA_BACKEND+'products');
+          this.products = products.data.rows;
+        },
         redirectRelation(relation_id){
           this.$router.push('/clients/'+this.$route.params.client_id+'/product-relation/'+relation_id);
         },
@@ -125,21 +129,24 @@
           return '';
         },
         submitForm(formName) {
+          this.loadingProduct = true;
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              this.$axios.post(process.env.URL_RA_BACKEND+'clients/'+this.$route.params.client_id+'/product-relation', this.form)
+              this.$axios.post(
+                process.env.URL_RA_BACKEND + 'clients/' + this.$route.params.client_id + '/product-relation', this.form)
                 .then(response => {
                   this.$notify({
                     title: 'Correcto',
                     message: 'El producto fue asignado correctamente',
                     type: 'success'
                   });
-                  let data = response.data.data.user_product;
-                  this.$router.push('/clients/'+this.$route.params.client_id+'/product-relation/'+data.id);
-                }).catch(function (error) {
+                  this.$emit('updateProductsList');
+                  this.openAddProduct = false;
+                  this.loadingProduct = false;
+                }).catch(error => {
                 console.log('El servicio no ha posido ser creado');
+                this.loadingProduct = false;
               });
-
             } else {
               return false;
             }
