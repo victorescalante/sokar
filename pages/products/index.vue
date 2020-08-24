@@ -3,7 +3,7 @@
     <TableGeneral title="Equipos" color="green">
 
       <div class="actions">
-        <nuxt-link to="repair/create"><el-button class="el-button--primary" icon="el-icon-plus">Agregar una equipo</el-button></nuxt-link>
+        <nuxt-link to="products/create"><el-button class="el-button--primary" icon="el-icon-plus" disabled>Agregar un equipo</el-button></nuxt-link>
       </div>
 
       <div class="content">

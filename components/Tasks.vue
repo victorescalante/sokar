@@ -15,11 +15,12 @@
               type="info"
               size="small"
               icon="el-icon-view"
-              @click="showActivity(activity.type, activity.id)"
+              @click="showActivity(activity.type, activity.id, activity)"
             >Detalle</el-button>
           </div>
         </el-col>
       </el-row>
+
     </div>
 </template>
 
@@ -27,10 +28,17 @@
     export default {
       name: "Tasks",
       props: ['tasks'],
+      data(){
+        return {
+          show_detail: false
+        }
+      },
       methods: {
-        showActivity(type_activity, id){
+        showActivity(type_activity, id, activity){
           if (type_activity === 'service'){
             this.$router.push('/services/' + id);
+          }else{
+            this.$emit('detailActivity', activity);
           }
         }
       }

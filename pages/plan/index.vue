@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <el-row :gutter="15">
       <el-col :xs="12" :md="24">
         <h2 class="primary-color">Plan de trabajo</h2>
@@ -12,9 +12,12 @@
       </el-col>
       <el-col :xs="12" :md="12">
         <div style="text-align: right">
+          <p>Revisar fecha</p>
+          <br>
           <el-date-picker
             format="d/M/yyyy"
             type="date"
+            @change="updateCalendar"
             v-model="now"
             placeholder="Selecciona una día">
           </el-date-picker>
@@ -24,11 +27,11 @@
     <el-row :gutter="25">
       <el-col :xs="24" :md="12">
         <h3 style="padding-top: 25px">Hoy <span style="font-size: 12px">({{ $convertDate(now) }})</span></h3>
-        <el-card class="el-card-custom">
+        <el-card class="el-card-custom" v-loading="loading_activities">
           <div slot="header" class="clearfix">
             <span>Plan de trabajo del día</span>
           </div>
-          <Tasks :tasks="todo_day" v-if="todo_day.length > 0"></Tasks>
+          <Tasks :tasks="todo_day" v-if="todo_day.length > 0" @detailActivity="showActivity($event)"></Tasks>
           <div style="text-align: center" v-else>
             <p>No hay actividades</p>
           </div>
@@ -37,7 +40,7 @@
       <el-col :xs="24" :md="12">
         <el-divider class="only-tablet"></el-divider>
         <h3 style="padding-top: 25px">Semanal <span style="font-size: 12px">(del {{ startWeek }} al {{ endWeek }})</span></h3>
-        <el-card class="el-card-custom">
+        <el-card class="el-card-custom" v-loading="loading_activities">
           <div slot="header" class="clearfix">
             <span>Plan de trabajo de la semana</span>
             <el-button style="float: right; padding: 3px 0" type="text" @click="DownloadPlanWeek">Descargar el plan semanal</el-button>
@@ -47,7 +50,7 @@
           </div>
           <div class="list-by-date" v-for="(dates, key) in activities_by_week" v-else>
             <h4 class="date-todo">{{ key }}</h4>
-            <Tasks :tasks="dates" ></Tasks>
+            <Tasks :tasks="dates" @detailActivity="showActivity($event)"></Tasks>
           </div>
         </el-card>
       </el-col>
@@ -57,7 +60,7 @@
       :visible.sync="viewFormTodo"
       :width="$getWidthModal(windowWidth)">
       <p>A continuación ingresa los detalles de la actividad a realizar.</p>
-      <el-form class="add-todo" ref="formTodo" :model="form">
+      <el-form class="add-todo" ref="formTodo" :model="form" :disabled="false">
         <el-row :gutter="15">
           <el-col :md="12">
             <el-form-item label="Tipo de actividad">
@@ -115,9 +118,13 @@
           </el-col>
         </el-row>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer" class="dialog-footer" v-if="detail_view === false">
         <el-button @click="viewFormTodo = false">Cancelar</el-button>
         <el-button type="primary" @click="submitForm('formTodo')">Agregar actividad</el-button>
+      </span>
+      <span slot="footer" class="dialog-footer" v-else>
+        <el-button @click="viewFormTodo = false">Cancelar</el-button>
+        <el-button type="primary" @click="updateActivity('formTodo')">Actualizar actividad</el-button>
       </span>
     </el-dialog>
 
@@ -143,7 +150,10 @@
     },
     data(){
       return{
+        loading: false,
+        loading_activities: false,
         windowWidth: 0,
+        detail_view: false,
         value: '',
         now: moment.now(),
         todo_day: [],
@@ -154,14 +164,27 @@
           type: 'remote',
           activity: "develop-project",
           kms: 0,
-          client_id: 2,
+          client_id: '',
           status: "open",
           date: ''
         }
       }
     },
     methods: {
+      showActivity(activity){
+        this.detail_view = true;
+        this.viewFormTodo = true;
+        activity.date = activity.date_activity;
+        activity.type = activity.type_activity;
+        activity.status = "open";
+        this.form = activity;
+        console.log(activity);
+      },
+      updateCalendar(){
+        this.getTodo()
+      },
       async DownloadPlanWeek() {
+        this.loading = true;
         let start_week = moment(this.now).locale('es-mx').startOf('week').format('YYYY-MM-DD');
         let end_week = moment(this.now).locale('es-mx').endOf('week').format('YYYY-MM-DD');
 
@@ -171,7 +194,8 @@
         }
 
         let response = await this.$axios.$post(process.env.URL_RA_BACKEND + 'download/file/plan_week', data);
-        download(atob(response), 'plan.pdf', 'application/pdf')
+        download(atob(response), 'plan.pdf', 'application/pdf');
+        this.loading = false;
       },
       isEmpty(obj) {
         for(let key in obj) {
@@ -185,6 +209,7 @@
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
+          this.form.date = moment(this.form.date).locale('es-mx').format('Y-M-D H:mm');
           if (valid) {
             if (this.form.client_id === 'no'){
               delete this.form.client_id;
@@ -197,6 +222,14 @@
                   type: 'success'
                 });
                 this.viewFormTodo = false
+                this.form = {
+                  type: 'remote',
+                  activity: "develop-project",
+                  kms: 0,
+                  client_id: '',
+                  status: "open",
+                  date: ''
+                }
                 this.getTodo();
               }).catch(error => {
               this.$notify.error({
@@ -210,7 +243,44 @@
           }
         });
       },
+      updateActivity(formName) {
+        this.$refs[formName].validate((valid) => {
+          this.form.date = moment(this.form.date).locale('es-mx').format('Y-M-D H:mm');
+          if (valid) {
+            if (this.form.client_id === 'no'){
+              delete this.form.client_id;
+            }
+            this.$axios.patch(process.env.URL_RA_BACKEND+'todo/'+this.form.id, this.form)
+              .then(response => {
+                this.$notify({
+                  title: 'Correcto',
+                  message: 'La tarea fue actualizada correctamente',
+                  type: 'success'
+                });
+                this.viewFormTodo = false
+                this.form = {
+                  type: 'remote',
+                  activity: "develop-project",
+                  kms: 0,
+                  client_id: '',
+                  status: "open",
+                  date: ''
+                }
+                this.getTodo();
+              }).catch(error => {
+              this.$notify.error({
+                title: 'Error',
+                message: 'La tarea no pudo ser actualizada'
+              });
+            });
+
+          } else {
+            return false;
+          }
+        });
+      },
       addTodo(){
+        this.detail_view = false;
         this.viewFormTodo = true;
       },
       async getTodo() {
@@ -220,6 +290,7 @@
         let data =  await this.$axios.$get(process.env.URL_RA_BACKEND + 'todo?date=' + now + '&start_week=' + start_week + '&end_week=' + end_week);
         this.todo_day = data.data.day;
         this.todo_week = data.data.week;
+        this.loading_activities = false;
       }
     },
     computed: {

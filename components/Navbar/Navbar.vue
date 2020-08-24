@@ -46,7 +46,7 @@
         <nuxt-link to="/services">
           <el-menu-item index="6" @click="onClickButton">
             <i class="el-icon-edit-outline"></i>
-            <span>Mantenimiento</span>
+            <span>Mantenimientos</span>
           </el-menu-item>
         </nuxt-link>
 
