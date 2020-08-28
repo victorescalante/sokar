@@ -12,7 +12,7 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="client.name"
+            prop="client.company_name"
             label="Nombre del cliente">
           </el-table-column>
           <el-table-column

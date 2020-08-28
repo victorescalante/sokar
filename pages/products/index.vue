@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TableGeneral title="Equipos" color="green">
+    <TableGeneral title="Administración de Equipos" color="green">
 
       <div class="actions">
         <nuxt-link to="products/create"><el-button class="el-button--primary" icon="el-icon-plus" disabled>Agregar un equipo</el-button></nuxt-link>
@@ -21,10 +21,12 @@
           <el-table-column
             prop="name"
             sortable
+            width="300"
             label="Nombre">
           </el-table-column>
           <el-table-column
             sortable
+            class-name="text-overflow"
             prop="description"
             label="Descripción">
           </el-table-column>
@@ -82,6 +84,13 @@
     }
     b{
       color: black;
+    }
+  }
+  .text-overflow{
+    .cell{
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 </style>

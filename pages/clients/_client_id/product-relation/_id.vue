@@ -20,7 +20,7 @@
               <span>Cliente</span>
             </div>
             <p>Nombre del cliente</p>
-            <strong>{{ product_user.client.name }}</strong>
+            <strong>{{ product_user.client.company_name }}</strong>
           </el-card>
         </el-col>
 

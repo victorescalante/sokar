@@ -18,27 +18,29 @@
           style="width: 100%" @row-click="HandleClickRow">
           <el-table-column
             prop="id"
-            label="ID" min-width="50px">
+            label="ID" width="50">
           </el-table-column>
           <el-table-column
-            prop="name"
-            label="Nombre" min-width="200px">
-          </el-table-column>
-          <el-table-column
-            prop="last_name"
-            label="Apellido" min-width="100px">
+            prop="company_name"
+            label="Nombre de la empresa" >
           </el-table-column>
           <el-table-column
             prop="email"
-            label="Correo electrónico" min-width="250px">
-          </el-table-column>
-          <el-table-column
-            prop="role"
-            label="Rol" min-width="100px">
+            width="200"
+            label="Correo electrónico">
           </el-table-column>
           <el-table-column
             prop="created_at"
-            label="Creado" min-width="200px">
+            label="Creado" >
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="Operaciones">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="handleEdit(scope.$index, scope.row)">Editar</el-button>
+            </template>
           </el-table-column>
         </el-table>
         <div style="text-align: center">

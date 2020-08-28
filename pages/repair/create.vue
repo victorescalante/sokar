@@ -17,26 +17,30 @@
                 </div>
               </el-col>
               <el-form ref="formService" :rules="rules" :model="form" class="form-style-curds">
-                <el-col :md="8">
-                  <el-form-item label="Nombre de la refacción">
-                    <el-input v-model="form.name"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Código">
-                    <el-input v-model="form.code"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="4">
-                  <el-form-item label="Cantidad de piezas">
-                    <el-input-number size="mini" v-model="form.quantity" :min="1"></el-input-number>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="4">
-                  <el-form-item label="Inventario">
-                    <el-input-number size="mini" v-model="form.quantity" :min="1"></el-input-number>
-                  </el-form-item>
-                </el-col>
+                <el-row>
+                  <el-col :md="8">
+                    <el-form-item label="Nombre de la refacción">
+                      <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :md="8">
+                    <el-form-item label="Código">
+                      <el-input v-model="form.code"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :md="8">
+                    <el-form-item label="Cantidad de piezas">
+                      <el-input-number size="mini" v-model="form.quantity" :min="1"></el-input-number>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :md="8">
+                    <el-form-item label="Inventario">
+                      <el-input-number size="mini" v-model="form.quantity" :min="1"></el-input-number>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
                 <el-col :md="8">
                   <el-form-item label="Tipo de producto" prop="name">
                     <el-select v-model="form.product_id" placeholder="Selecciona un tipo de producto">

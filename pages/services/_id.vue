@@ -29,7 +29,7 @@
                           <el-option
                             v-for="client in clients"
                             :key="client.id"
-                            :label="client.name"
+                            :label="client.company_name"
                             :value="client.id">
                           </el-option>
                         </el-select>
@@ -108,7 +108,7 @@
 
     </TableGeneral>
     <TableGeneral :title="'Ordenen de servicio #'+(key+1)" color="blue" v-for="(report, key) in reports">
-      <el-row>
+      <el-row :gutter="15">
         <el-col :md="18">
           <el-card>
             <p><b>{{ report.product_user.product.name }}</b> - {{ report.product_user.serial_number }}</p>

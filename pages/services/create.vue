@@ -29,7 +29,7 @@
                           <el-option
                             v-for="client in clients"
                             :key="client.id"
-                            :label="client.name"
+                            :label="client.company_name"
                             :value="client.id">
                           </el-option>
                         </el-select>

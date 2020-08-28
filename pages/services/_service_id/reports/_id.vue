@@ -6,7 +6,7 @@
         <el-col :md="24">
           <el-card>
             <p>Este es el reporte detallado para el producto <b>{{ report.product_user.product.name }}</b>
-              el cual se encuentra asociado al cliente <b>{{ report.product_user.client.name }}</b> </p>
+              el cual se encuentra asociado al cliente <b>{{ report.product_user.client.company_name }}</b> </p>
           </el-card>
           <el-card>
             <el-row style="text-align: center">
