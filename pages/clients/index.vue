@@ -109,16 +109,6 @@
                 <el-input v-model="form.second_last_name"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :md="8">
-              <el-form-item label="Correo electrónico" prop="email">
-                <el-input v-model="form.email"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :md="8">
-              <el-form-item label="Contraseña" prop="password">
-                <el-input type="password" v-model="form.password"></el-input>
-              </el-form-item>
-            </el-col>
           </el-row>
 
         </el-form>
@@ -137,6 +127,7 @@
 
 <script>
   import TableGeneral from "../../components/tables/TableGeneral";
+  import moment from 'moment';
 
   export default {
     layout: 'dashboard',
@@ -176,8 +167,6 @@
         rules: {
           name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],
           last_name: [{required: true, message: 'Agrega apellido', trigger: 'blur'}],
-          email: [{required: true, message: 'Agrega un correo', trigger: 'blur'}],
-          password: [{required: true, message: 'Agrega una contraseña', trigger: 'blur'}],
           company_name: [{required: true, message: 'Agrega el nombre de la empresa', trigger: 'blur'}]
         }
       }
@@ -217,6 +206,8 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.form.email = moment().format("YYYY_MM_DDTHH_MM") + '@client.com';
+            this.form.password = '@client.com';
             this.$axios.post(process.env.URL_RA_BACKEND+'users', this.form)
               .then(response => {
                 this.data.push(response.data.data.user);
