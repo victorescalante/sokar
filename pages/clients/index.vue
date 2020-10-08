@@ -204,11 +204,12 @@
         this.$refs[formName].resetFields();
       },
       getDateEmail(){
-        return moment().format("YYYY_MM_DDTHH_MM") + '@client.com';
+        return moment().format("YYYY_MM_DDTHH_MM_SS") + '@client.com';
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.form.email = "";
             this.form.email = this.getDateEmail();
             this.form.password = '@client.com';
             this.$axios.post(process.env.URL_RA_BACKEND+'users', this.form)
