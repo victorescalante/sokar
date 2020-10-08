@@ -17,10 +17,11 @@
           </el-card>
           <el-card class="box-card">
             <div slot="header" class="clearfix">
-              <span>Cliente</span>
+              <span>Datos del cliente</span>
             </div>
-            <p>Nombre del cliente</p>
-            <strong>{{ product_user.client.company_name }}</strong>
+            <p><strong>Razón social:</strong> {{ product_user.client.business_name }}</p>
+            <p><strong>Nombre de la empresa:</strong> {{ product_user.client.company_name }}</p>
+            <p><strong>RFC:</strong> {{ product_user.client.rfc }}</p>
           </el-card>
         </el-col>
 
@@ -28,6 +29,7 @@
           <el-card class="box-card">
             <div slot="header" class="clearfix">
               <span>Detalle del producto asociado al cliente</span>
+              <el-button style="float: right; padding: 3px 0" type="text" @click="dialogVisibleEdit=true">Actualizar producto</el-button>
             </div>
             <el-row class="card-details">
               <el-col :md="24">
@@ -41,7 +43,7 @@
                 <strong>{{ $statusProduct(product_user.status) }}</strong>
               </el-col>
               <el-col :md="8">
-                <p>Tipo de producto</p>
+                <p>Tipo de equipo</p>
                 <strong>{{ $typeProduct(product_user.product_type) }}</strong>
               </el-col>
             </el-row>
@@ -175,6 +177,46 @@
 
     </div>
 
+    <el-dialog
+      title="Editar el equipo del cliente"
+      :visible.sync="dialogVisibleEdit"
+      width="50%">
+      <el-row>
+        <el-col :md="20">
+          <p>El periodo de servicio es un dato muy importante ya que este define la proxima fecha de mantenimiento.</p>
+          <br>
+        </el-col>
+      </el-row>
+      <el-form ref="form" :model="product_user" >
+        <el-row>
+          <el-col :md="8">
+            <el-form-item label="Tipo de producto">
+              <el-select v-model="product_user.product_type" placeholder="Tipo de producto">
+                <el-option label="Propio" value="own"></el-option>
+                <el-option label="Comodato" value="borrowed"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :md="8">
+            <el-form-item label="Periodo de servicio (días)">
+              <el-input-number v-model="product_user.period_service" :min="1" :max="365"></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :md="8">
+            <el-form-item label="Estatus">
+              <el-select v-model="product_user.status" placeholder="Estatus">
+                <el-option label="Activo" :value=true></el-option>
+                <el-option label="Inactivo" :value=false></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleEdit = false">Cancel</el-button>
+        <el-button type="primary" @click="updateProduct()">Actualizar</el-button>
+      </span>
+    </el-dialog>
 
   </div>
 </template>
@@ -202,6 +244,7 @@
         product_type: "own",
         dialogImageUrl: '',
         dialogVisible: false,
+        dialogVisibleEdit: false,
         upload: {
           url: process.env.URL_RA_BACKEND+'files',
           headers: {
@@ -222,6 +265,15 @@
           model_id: this.upload.data.model_id,
           model: this.upload.data.model
         }
+      },
+      async updateProduct(){
+        await this.$axios.$patch(process.env.URL_RA_BACKEND + 'clients/' + this.$route.params.client_id + '/product-relation/' + this.$route.params.id, this.product_user);
+        this.$notify({
+          title: 'Producto actualizado',
+          message: 'El producto ha sido actualizado correctamente.',
+          type: 'success'
+        });
+        this.dialogVisibleEdit = false;
       },
       filterImagesByCategory(category){
         return _.filter(this.upload.list, {'category': category})
