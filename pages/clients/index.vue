@@ -204,7 +204,7 @@
         this.$refs[formName].resetFields();
       },
       getDateEmail(){
-        return moment().format("YYYY_MM_DDTHH_MM_SS") + '@client.com';
+        return moment().format("YYYY_MM_DDTHH_MM_SS_SSS") + '@client.com';
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
