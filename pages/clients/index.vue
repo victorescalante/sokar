@@ -203,10 +203,13 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
+      getDateEmail(){
+        return moment().format("YYYY_MM_DDTHH_MM") + '@client.com';
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.form.email = moment().format("YYYY_MM_DDTHH_MM") + '@client.com';
+            this.form.email = this.getDateEmail();
             this.form.password = '@client.com';
             this.$axios.post(process.env.URL_RA_BACKEND+'users', this.form)
               .then(response => {
