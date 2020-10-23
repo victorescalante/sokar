@@ -77,7 +77,7 @@
                       type="date">
                     </el-date-picker>
                   </div>
-                  <div class="i-block">
+                  <div class="i-block" v-if="$currentRole(['admin'])">
                     <p>Tecnico responsable</p>
                     <el-select v-model="params.technical_id">
                       <el-option label="Todos" value=""></el-option>
