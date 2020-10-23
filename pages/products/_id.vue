@@ -1,67 +1,83 @@
 <template>
   <div>
+    <TableGeneral title="Productos" color="purple">
 
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/users' }">Usuarios</el-breadcrumb-item>
-      <el-breadcrumb-item>Actualizar de usuario</el-breadcrumb-item>
-    </el-breadcrumb>
+      <el-row>
+        <el-col :md="24" style="padding: 15px">
+          <el-card>
+            <el-row>
+              <el-col :md="24">
+                <h3>Actualización de producto</h3>
+                <br>
+                <hr>
+              </el-col>
+              <el-col :md="24">
+                <div class="content-space">
+                  <p>Información</p>
+                </div>
+              </el-col>
+              <el-form ref="formService" :rules="rules" :model="form" class="form-style-curds">
+                <el-row>
+                  <el-col :md="8">
+                    <el-form-item label="Nombre del producto" prop="name">
+                      <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :md="8">
+                    <el-form-item label="Código" prop="code">
+                      <el-input v-model="form.code"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :md="24">
+                    <el-form-item label="Descripción" prop="description">
+                      <el-input type="textarea" rows="5"  v-model="form.description"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :md="24">
+                    <el-form-item label="Especificaciones de diseño" prop="specifications_desing">
+                      <el-input type="textarea" rows="5"  v-model="form.specifications_desing"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :md="24">
+                    <el-form-item label="Especificaciones de operación" prop="specifications_operation">
+                      <el-input type="textarea" rows="5"  v-model="form.specifications_operation"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :md="24">
+                    <el-form-item label="Beneficios" prop="benefits">
+                      <el-input type="textarea" rows="5"  v-model="form.benefits"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-col :md="24" class="custom-buttons">
+                  <el-button type="primary" @click.stop="submitForm('formService')">Actualizar Producto</el-button>
+                </el-col>
+              </el-form>
+            </el-row>
+          </el-card>
+        </el-col>
 
-    <el-row class="group-title">
-      <el-col :md="12">
-        <TitleSection title="Actualizar Cliente"></TitleSection>
-      </el-col>
-    </el-row>
+      </el-row>
 
-    <el-row>
-      <el-col :md="24">
-        <div class="content-space">
-          <p>Información personal del usuario</p>
-        </div>
-      </el-col>
-      <el-form ref="formUser" :rules="rules" :model="form" class="form-style-curds">
-        <el-col :md="6">
-          <el-form-item label="Nombre completo" prop="name">
-            <el-input v-model="form.name" required></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="6">
-          <el-form-item label="Apellido Paterno" prop="last_name">
-            <el-input v-model="form.last_name"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="6">
-          <el-form-item label="Apellido Materno" prop="second_last_name">
-            <el-input v-model="form.second_last_name"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="24">
-          <div class="content-space">
-            <p>Datos de acceso a la plataforma</p>
-          </div>
-        </el-col>
-        <el-col :md="6">
-          <el-form-item label="Correo electrónico" prop="email">
-            <el-input v-model="form.email"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="6">
-          <el-form-item label="Nueva Contraseña" prop="password">
-            <el-input type="password" v-model="form.password"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="24">
-          <div class="content-space">
-            <el-button type="primary" @click="submitForm('formUser')">Actualizar usuario</el-button>
-          </div>
-        </el-col>
-      </el-form>
-    </el-row>
-
+    </TableGeneral>
   </div>
 </template>
 
+<style lang="scss">
+  .el-select{
+    width: 100%;
+  }
+  .custom-buttons{
+    padding: 15px;
+    text-align: right;
+  }
+</style>
+
 <script>
-  import TitleSection from "../../components/TitleSection/TitleSection";
+
+  import TableGeneral from "../../components/tables/TableGeneral";
 
   export default {
     layout: 'dashboard',
@@ -71,66 +87,69 @@
       mode: 'out-in'
     },
     components: {
-      TitleSection: TitleSection
+      TableGeneral: TableGeneral
     },
     head () {
       return {
-        title: 'Actualización de usuario',
+        title: 'Edición de productos',
       }
     },
-    data(){
-      return {
-        form: {
-          name: '',
-          last_name: '',
-          second_last_name: '',
-          email: '',
-          password: '',
-          role: 'cliente'
-        },
-        rules: {
-          name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],
-          last_name: [{required: true, message: 'Agrega apellido', trigger: 'blur'}],
-          email: [{required: true, message: 'Agrega un correo', trigger: 'blur'}]
-        }
-      }
+    async fetch(){
+      await this.getProduct();
     },
     methods: {
-      submitForm(formName){
+      async getProduct(){
+        let product = await this.$axios.$get(process.env.URL_RA_BACKEND + 'products/'+ this.$route.params.id);
+        this.form = product.data.product;
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+      submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if (this.form.password.length <= 1){
-              delete this.form.password;
-            }
-            this.$axios.put(process.env.URL_RA_BACKEND+'users/'+this.$route.params.id, this.form)
+            this.$axios.put(process.env.URL_RA_BACKEND + 'products/' + this.$route.params.id, this.form)
               .then(response => {
                 this.$notify({
                   title: 'Correcto',
-                  message: 'El usuario fue actualizado correctamente',
+                  message: 'El producto fue actualizado correctamente',
                   type: 'success'
                 });
+                this.$router.push('/products');
               }).catch(error => {
               this.$notify.error({
                 title: 'Error',
-                message: 'El usuario no ha posido ser actualizado'
+                message: 'El producto no pudo ser actualizado correctamente'
               });
             });
+
           } else {
             return false;
           }
         });
-      },
-      getUser() {
-        this.$axios.get(process.env.URL_RA_BACKEND + 'users/' + this.$route.params.id)
-          .then(response => {
-            this.form = response.data.data.user;
-          }).catch(error => {
-          console.log("error");
-          });
       }
     },
-    mounted() {
-      this.getUser();
+    data(){
+      return {
+        products: [],
+        categories: [],
+        form: {
+          code: "",
+          name: "",
+          specifications_desing: "",
+          specifications_operation: "",
+          benefits: "",
+          category_id: 1
+        },
+        rules: {
+          specifications_desing: [{required: true, message: 'Agrega especificaciones de diseño', trigger: 'blur'}],
+          specifications_operation: [{required: true, message: 'Agrega especificaciones de operación', trigger: 'blur'}],
+          description: [{required: true, message: 'Agrega descripción', trigger: 'blur'}],
+          benefits: [{required: true, message: 'Agrega beneficios', trigger: 'blur'}],
+          code: [{required: true, message: 'Agrega codigo', trigger: 'blur'}],
+          name: [{required: true, message: 'Agrega un nombre', trigger: 'blur'}]
+        }
+      }
     }
   }
 </script>

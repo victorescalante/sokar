@@ -3,7 +3,7 @@
     <TableGeneral title="Administración de Equipos" color="green">
 
       <div class="actions">
-        <nuxt-link to="products/create"><el-button class="el-button--primary" icon="el-icon-plus" disabled>Agregar un equipo</el-button></nuxt-link>
+        <nuxt-link to="products/create"><el-button class="el-button--primary" icon="el-icon-plus">Agregar un equipo</el-button></nuxt-link>
       </div>
 
       <div class="content">
@@ -67,8 +67,8 @@
       <p><b>Especificaciones de diseño: </b>{{ viewData.specifications_desing }}</p>
       <p><b>Especificaciones de operación: </b>{{ viewData.specifications_operation }}</p>
       <p><b>Beneficios: </b>{{ viewData.benefits }}</p>
-      <p><b>Precio: </b>$ 0</p>
-      <p><b>Inventario: </b>0</p>
+      <!-- <p><b>Precio: </b>$ 0</p>
+      <p><b>Inventario: </b>0</p> -->
     </el-dialog>
   </div>
 </template>
@@ -151,7 +151,7 @@
         this.total_data = data.data.total;
       },
       handleEdit(index, row){
-        this.$router.push('/repair/'+row.id);
+        this.$router.push('/products/'+row.id);
       },
       handleView(index, row){
         this.viewData = row;

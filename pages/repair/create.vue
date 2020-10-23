@@ -19,56 +19,44 @@
               <el-form ref="formService" :rules="rules" :model="form" class="form-style-curds">
                 <el-row>
                   <el-col :md="8">
-                    <el-form-item label="Nombre de la refacción">
+                    <el-form-item label="Nombre de la refacción" prop="name">
                       <el-input v-model="form.name"></el-input>
                     </el-form-item>
                   </el-col>
                   <el-col :md="8">
-                    <el-form-item label="Código">
+                    <el-form-item label="Código" prop="code">
                       <el-input v-model="form.code"></el-input>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :md="8">
-                    <el-form-item label="Cantidad de piezas">
-                      <el-input-number size="mini" v-model="form.quantity" :min="1"></el-input-number>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :md="8">
-                    <el-form-item label="Inventario">
+                    <el-form-item label="Cantidad de piezas" prop="quantity">
                       <el-input-number size="mini" v-model="form.quantity" :min="1"></el-input-number>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-col :md="8">
                   <el-form-item label="Tipo de producto" prop="name">
-                    <el-select v-model="form.product_id" placeholder="Selecciona un tipo de producto">
+                    <el-select v-model="form.product_repair_parts_id" placeholder="Selecciona un tipo de producto">
                       <el-option v-for="product in products" :label="product.name" :value="product.id"></el-option>
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :md="8">
                   <el-form-item label="Categoría" prop="name">
-                    <el-select v-model="form.category_id" placeholder="Selecciona una categoría">
+                    <el-select v-model="form.category_repair_parts_id" placeholder="Selecciona una categoría">
                       <el-option v-for="category in categories" :label="category.name" :value="category.id"></el-option>
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Precio">
-                    <el-input placeholder="Coloca el precio" v-model="input1">
-                      <template slot="prepend">$</template>
-                    </el-input>
-                  </el-form-item>
-                </el-col>
                 <el-col :md="24">
                   <el-form-item label="Caracteristicas de la refacción">
-                    <el-input type="textarea" rows="5"  v-model="form.desc"></el-input>
+                    <el-input type="textarea" rows="5"  v-model="form.features"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :md="24" class="custom-buttons">
-                  <el-button type="primary">Agregar Refacción</el-button>
+                  <el-button type="primary" @click.stop="submitForm('formService')">Agregar Refacción</el-button>
                 </el-col>
               </el-form>
             </el-row>
@@ -118,8 +106,8 @@
     },
     methods: {
       async getProducts() {
-        let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'repairs/product-relation');
-        this.products = data.data.products;
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'products?limit=200');
+        this.products = data.data.rows;
       },
       async getCategories() {
         let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'repairs/categories');
@@ -131,18 +119,18 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$axios.post(process.env.URL_RA_BACKEND+'users', this.form)
+            this.$axios.post(process.env.URL_RA_BACKEND+'repairs', this.form)
               .then(response => {
                 this.$notify({
                   title: 'Correcto',
-                  message: 'El cliente fue creado correctamente',
+                  message: 'La refacción fue creada correctamente',
                   type: 'success'
                 });
-                this.$router.push('/clients');
+                this.$router.push('/repair');
               }).catch(error => {
               this.$notify.error({
                 title: 'Error',
-                message: 'El cliente no ha posido ser creado'
+                message: 'La refacción no pudo ser creada correctamente'
               });
             });
 
@@ -157,19 +145,21 @@
         products: [],
         categories: [],
         form: {
-          name: '',
-          last_name: '',
-          second_last_name: '',
-          email: '',
-          password: '',
-          role: 'cliente',
-          num: 1
+          features: "",
+          quantity: 1,
+          code: "",
+          category_repair_parts_id: "",
+          product_repair_parts_id: "",
+          name: "",
+          number_diken: 0
         },
         rules: {
-          name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],
-          last_name: [{required: true, message: 'Agrega apellido', trigger: 'blur'}],
-          email: [{required: true, message: 'Agrega un correo', trigger: 'blur'}],
-          password: [{required: true, message: 'Agrega una contraseña', trigger: 'blur'}]
+          features: [{required: true, message: 'Agrega caracteristicas', trigger: 'blur'}],
+          quantity: [{required: true, message: 'Agrega cantidad', trigger: 'blur'}],
+          code: [{required: true, message: 'Agrega codigo', trigger: 'blur'}],
+          category_repair_parts_id: [{required: true, message: 'Agrega una categoría', trigger: 'blur'}],
+          product_repair_parts_id: [{required: true, message: 'Agrega un producto', trigger: 'blur'}],
+          name: [{required: true, message: 'Agrega un nombre', trigger: 'blur'}]
         }
       }
     }

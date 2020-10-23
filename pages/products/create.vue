@@ -1,13 +1,13 @@
 <template>
   <div>
-    <TableGeneral title="Refacciones" color="purple">
+    <TableGeneral title="Productos" color="purple">
 
       <el-row>
         <el-col :md="24" style="padding: 15px">
           <el-card>
             <el-row>
               <el-col :md="24">
-                <h3>Registro</h3>
+                <h3>Registro de producto</h3>
                 <br>
                 <hr>
               </el-col>
@@ -17,54 +17,42 @@
                 </div>
               </el-col>
               <el-form ref="formService" :rules="rules" :model="form" class="form-style-curds">
-                <el-col :md="8">
-                  <el-form-item label="Nombre de la refacción">
-                    <el-input v-model="form.name"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Código">
-                    <el-input v-model="form.code"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="4">
-                  <el-form-item label="Cantidad de piezas">
-                    <el-input-number size="mini" v-model="form.quantity" :min="1"></el-input-number>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="4">
-                  <el-form-item label="Inventario">
-                    <el-input-number size="mini" v-model="form.quantity" :min="1"></el-input-number>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Tipo de producto" prop="name">
-                    <el-select v-model="form.product_id" placeholder="Selecciona un tipo de producto">
-                      <el-option v-for="product in products" :label="product.name" :value="product.id"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Categoría" prop="name">
-                    <el-select v-model="form.category_id" placeholder="Selecciona una categoría">
-                      <el-option v-for="category in categories" :label="category.name" :value="category.id"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="Precio">
-                    <el-input placeholder="Coloca el precio" v-model="input1">
-                      <template slot="prepend">$</template>
-                    </el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :md="24">
-                  <el-form-item label="Caracteristicas de la refacción">
-                    <el-input type="textarea" rows="5"  v-model="form.desc"></el-input>
-                  </el-form-item>
-                </el-col>
+                <el-row>
+                  <el-col :md="8">
+                    <el-form-item label="Nombre del producto" prop="name">
+                      <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :md="8">
+                    <el-form-item label="Código" prop="code">
+                      <el-input v-model="form.code"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :md="24">
+                    <el-form-item label="Descripción" prop="description">
+                      <el-input type="textarea" rows="5"  v-model="form.description"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :md="24">
+                    <el-form-item label="Especificaciones de diseño" prop="specifications_desing">
+                      <el-input type="textarea" rows="5"  v-model="form.specifications_desing"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :md="24">
+                    <el-form-item label="Especificaciones de operación" prop="specifications_operation">
+                      <el-input type="textarea" rows="5"  v-model="form.specifications_operation"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :md="24">
+                    <el-form-item label="Beneficios" prop="benefits">
+                      <el-input type="textarea" rows="5"  v-model="form.benefits"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
                 <el-col :md="24" class="custom-buttons">
-                  <el-button type="primary">Agregar Refacción</el-button>
+                  <el-button type="primary" @click.stop="submitForm('formService')">Agregar Producto</el-button>
                 </el-col>
               </el-form>
             </el-row>
@@ -106,39 +94,25 @@
         title: 'Creación de Refacciones',
       }
     },
-    mounted: function () {
-      this.$nextTick(function () {
-        this.getProducts();
-        this.getCategories();
-      })
-    },
     methods: {
-      async getProducts() {
-        let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'repairs/product-relation');
-        this.products = data.data.products;
-      },
-      async getCategories() {
-        let data = await this.$axios.$get(process.env.URL_RA_BACKEND + 'repairs/categories');
-        this.categories = data.data.categories;
-      },
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$axios.post(process.env.URL_RA_BACKEND+'users', this.form)
+            this.$axios.post(process.env.URL_RA_BACKEND + 'products', this.form)
               .then(response => {
                 this.$notify({
                   title: 'Correcto',
-                  message: 'El cliente fue creado correctamente',
+                  message: 'El producto fue creado correctamente',
                   type: 'success'
                 });
-                this.$router.push('/clients');
+                this.$router.push('/products');
               }).catch(error => {
               this.$notify.error({
                 title: 'Error',
-                message: 'El cliente no ha posido ser creado'
+                message: 'El producto no pudo ser creado correctamente'
               });
             });
 
@@ -153,19 +127,20 @@
         products: [],
         categories: [],
         form: {
-          name: '',
-          last_name: '',
-          second_last_name: '',
-          email: '',
-          password: '',
-          role: 'cliente',
-          num: 1
+          code: "",
+          name: "",
+          specifications_desing: "",
+          specifications_operation: "",
+          benefits: "",
+          category_id: 1
         },
         rules: {
-          name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],
-          last_name: [{required: true, message: 'Agrega apellido', trigger: 'blur'}],
-          email: [{required: true, message: 'Agrega un correo', trigger: 'blur'}],
-          password: [{required: true, message: 'Agrega una contraseña', trigger: 'blur'}]
+          specifications_desing: [{required: true, message: 'Agrega especificaciones de diseño', trigger: 'blur'}],
+          specifications_operation: [{required: true, message: 'Agrega especificaciones de operación', trigger: 'blur'}],
+          description: [{required: true, message: 'Agrega descripción', trigger: 'blur'}],
+          benefits: [{required: true, message: 'Agrega beneficios', trigger: 'blur'}],
+          code: [{required: true, message: 'Agrega codigo', trigger: 'blur'}],
+          name: [{required: true, message: 'Agrega un nombre', trigger: 'blur'}]
         }
       }
     }
