@@ -65,6 +65,11 @@
                 <strong> {{ $convertDate(product_user.created_at) }}</strong>
               </el-col>
             </el-row>
+            <el-row style="padding-top: 20px">
+              <el-col :md="24">
+                <el-button @click="downloadQRProduct">Descargar código QR del producto</el-button>
+              </el-col>
+            </el-row>
           </el-card>
         </el-col>
       </el-row>
@@ -292,6 +297,10 @@
       async downloadFormatWarranty() {
         let response = await this.$axios.$post(process.env.URL_RA_BACKEND + 'download/file/warranty', this.form);
         download(atob(response), 'warranty.pdf', 'application/pdf')
+      },
+      async downloadQRProduct() {
+        let response = await this.$axios.$post(process.env.URL_RA_BACKEND + 'download/product/qr', {serial_number: this.product_user.serial_number});
+        download(atob(response), 'qr.pdf', 'application/pdf')
       },
       async getProductUser() {
         let data = await this.$axios.$get(

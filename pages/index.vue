@@ -99,6 +99,27 @@
                 </div>
               </el-col>
             </el-row>
+            <el-row>
+              <el-col :md="12">
+                <div>
+                  <el-button type="success" @click="downloadReport" v-if="total >= 1">Descargar reporte</el-button>
+                </div>
+              </el-col>
+              <el-col :md="12">
+                <div style="text-align: right">
+                  <el-pagination
+                    v-if="total >= 1"
+                    class="custom-paginator"
+                    @size-change="handleSizeChange"
+                    @current-change="HandleCurrentPage"
+                    :page-sizes="[50, 100, 200]"
+                    :page-size="50"
+                    layout="sizes, prev, pager, next"
+                    :total="total">
+                  </el-pagination>
+                </div>
+              </el-col>
+            </el-row>
           </div>
           <div style="overflow-x:auto;">
             <el-table
@@ -150,31 +171,17 @@
                 label="Costos extras"
                 width="120">
                 <template slot-scope="scope">
-                  <p>$ {{ scope.row.extra_total_costs }}</p>
+                  <p>$ {{ scope.row.extra_total_costs || "0" }}</p>
                 </template>
               </el-table-column>
               <el-table-column
                 label="Costo de refacciones"
                 width="200">
                 <template slot-scope="scope">
-                  <p>$ {{ scope.row.repairs_total_cost }}</p>
+                  <p>$ {{ scope.row.repairs_total_cost || "0" }}</p>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop="number_services"
-                label="# de servicios"
-                width="120">
-              </el-table-column>
             </el-table>
-            <el-pagination
-              class="custom-paginator"
-              @size-change="handleSizeChange"
-              @current-change="HandleCurrentPage"
-              :page-sizes="[50, 100, 200]"
-              :page-size="50"
-              layout="sizes, prev, pager, next"
-              :total="total">
-            </el-pagination>
           </div>
         </el-col>
       </el-row>
@@ -212,6 +219,28 @@
       }
     },
     methods: {
+      async downloadReport(){
+        this.params.download = true;
+        this.$axios.get(process.env.URL_RA_BACKEND+'report/services', {
+          params: this.params,
+          responseType: "blob"
+        }).then(res => {
+          let blob = new Blob([res.data], {
+            type: "application/vnd.ms-excel"
+          }); // 2. Get the blob setting file type in the response object returned by the request. Here is excel as an example.
+          let url = window.URL.createObjectURL(blob); // 3. Create a temporary url pointing to the blob object
+
+          // 4. After creating the url, you can simulate a series of operations on this file object, for example: preview, download
+          let a = document.createElement("a");
+          a.href = url;
+          a.download = "Reporte de servicios "+ moment().format("MMMM Do YYYY") +" .xlsx";
+          a.click();
+          // 5. Release this temporary object url
+          window.URL.revokeObjectURL(url);
+        }).catch((error) => {
+          console.log(error);
+        });
+      },
       async getReport(){
         let report = await this.$axios.$get(process.env.URL_RA_BACKEND+'report/services', {
           params: this.params

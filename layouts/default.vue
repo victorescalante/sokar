@@ -34,7 +34,6 @@ html {
     background: #0767C6 0% 0% no-repeat padding-box;
     height: 50px;
     width: 100%;
-    position: absolute;
     z-index: 10;
   }
 

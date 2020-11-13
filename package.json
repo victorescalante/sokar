@@ -23,7 +23,8 @@
     "minimist": "^1.2.5",
     "moment": "^2.27.0",
     "nuxt": "^2.12.2",
-    "vinyl-ftp": "^0.6.1"
+    "vinyl-ftp": "^0.6.1",
+    "vue-qrcode-reader": "^2.3.14"
   },
   "devDependencies": {
     "@nuxtjs/style-resources": "^1.0.0",

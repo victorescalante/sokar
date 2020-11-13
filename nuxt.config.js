@@ -35,7 +35,8 @@ export default {
     '@/plugins/element-ui',
     '@/plugins/axios',
     '@/plugins/products.js',
-    '@/plugins/dates.js'
+    '@/plugins/dates.js',
+    {src: '@/plugins/qr-reader.js', mode: 'client'}
   ],
   /*
   ** Nuxt.js dev-modules
