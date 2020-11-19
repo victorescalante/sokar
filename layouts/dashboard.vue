@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="">
     <el-row class="tac">
       <el-col :sm="6" :md="5">
         <div class="custom-desktop" :class="{ active: openNav }">
@@ -104,6 +104,12 @@
       width: 70px;
     }
 
+  }
+
+  .layout-general{
+    max-width: 1140px;
+    padding: 0;
+    margin: 0 auto;
   }
 
   .content-layout{

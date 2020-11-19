@@ -144,7 +144,6 @@
                   this.openAddProduct = false;
                   this.loadingProduct = false;
                 }).catch(error => {
-                console.log('El servicio no ha posido ser creado');
                 this.loadingProduct = false;
               });
             } else {

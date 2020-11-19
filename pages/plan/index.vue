@@ -178,7 +178,6 @@
         activity.type = activity.type_activity;
         activity.status = "open";
         this.form = activity;
-        console.log(activity);
       },
       updateCalendar(){
         this.getTodo()

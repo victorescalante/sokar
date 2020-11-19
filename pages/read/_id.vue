@@ -60,7 +60,7 @@
         this.$router.push('/read');
       },
       HandleClickRow(row, column, event){
-        this.$router.push('/services/'); // Agregar el id del servicio *pendiente
+        this.$router.push('/services/'+row.services_id+'/reports/'+row.report_number); // Agregar el id del servicio *pendiente
       },
     },
     async fetch(){

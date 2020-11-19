@@ -14,11 +14,13 @@
 
     <el-row>
       <el-form ref="formUser" :rules="rules" :model="form" class="form-style-curds">
-        <el-col :md="24">
-          <div class="content-space">
-            <p>Información de la empresa</p>
-          </div>
-        </el-col>
+        <el-row>
+          <el-col :md="24">
+            <div class="content-space">
+              <p>Información de la empresa</p>
+            </div>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :md="6">
             <el-form-item label="Razón social" prop="business_name">
@@ -36,11 +38,13 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-col :md="24">
-          <div class="content-space">
-            <p>Datos de acceso a la plataforma</p>
-          </div>
-        </el-col>
+        <el-row>
+          <el-col :md="24">
+            <div class="content-space">
+              <p>Datos de acceso a la plataforma</p>
+            </div>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :md="6">
             <el-form-item label="Nombre completo" prop="name">
@@ -72,9 +76,43 @@
             </el-tooltip>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :md="12">
+            <div class="content-space">
+              <p>Datos de contacto</p>
+            </div>
+          </el-col>
+          <el-col :md="12">
+            <div class="content-space">
+              <el-button type="primary" @click="addContact" size="small" plain>Agregar nuevo contacto</el-button>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row v-for="(contact, index) in form.contacts">
+          <el-col :md="6">
+            <el-form-item label="Nombre de contacto">
+              <el-input v-model="contact.name"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="6">
+            <el-form-item label="Teléfono de contacto">
+              <el-input v-model="contact.phone"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="6">
+            <el-form-item label="Puesto">
+              <el-input v-model="contact.job"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="6">
+            <div style="padding-top: 35px">
+              <el-button type="danger" plain @click="DeleteContact(index)">Eliminar contacto</el-button>
+            </div>
+          </el-col>
+        </el-row>
         <el-col :md="24" v-if="$currentRole(['admin'])">
           <div class="content-space">
-            <el-button type="primary"  @click="submitForm('formUser')">Actualizar cliente</el-button>
+            <el-button type="primary" @click="submitForm('formUser')">Actualizar datos de cliente</el-button>
           </div>
         </el-col>
         <el-col :md="24">
@@ -113,7 +151,8 @@
           password: "",
           business_name: "",
           rfc: "",
-          company_name: ""
+          company_name: "",
+          contacts: []
         },
         rules: {
           name: [{required: true, message: 'Agrega nombre', trigger: 'blur'}],
@@ -125,6 +164,16 @@
       }
     },
     methods: {
+      addContact(){
+        this.form.contacts.push({
+          name: "",
+          phone: "",
+          job: ""
+        })
+      },
+      DeleteContact(position){
+        this.form.contacts.splice(position, 1);
+      },
       submitForm(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {

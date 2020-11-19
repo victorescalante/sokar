@@ -23,6 +23,12 @@
             <p><strong>Nombre de la empresa:</strong> {{ product_user.client.company_name }}</p>
             <p><strong>RFC:</strong> {{ product_user.client.rfc }}</p>
           </el-card>
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span>Código QR del producto</span>
+            </div>
+            <el-button type="primary" @click="downloadQRProduct">Descargar código QR del producto</el-button>
+          </el-card>
         </el-col>
 
         <el-col :md="16">
@@ -63,11 +69,6 @@
               <el-col :md="8">
                 <p>Registro de producto</p>
                 <strong> {{ $convertDate(product_user.created_at) }}</strong>
-              </el-col>
-            </el-row>
-            <el-row style="padding-top: 20px">
-              <el-col :md="24">
-                <el-button @click="downloadQRProduct">Descargar código QR del producto</el-button>
               </el-col>
             </el-row>
           </el-card>

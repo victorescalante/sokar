@@ -111,7 +111,6 @@
       submitForm(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            // console.log(this.form.password.length);
             // delete this.form.password;
             this.$axios.put(process.env.URL_RA_BACKEND+'users/'+this.$route.params.id, this.form)
               .then(response => {

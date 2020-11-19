@@ -72,7 +72,6 @@
     methods: {
       async init() {
         let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'services');
-        console.log(data);
         this.data = data.data.services;
       },
       handleEdit(index, row){

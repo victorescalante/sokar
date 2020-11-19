@@ -72,30 +72,36 @@
                     </el-col>
                   </el-row>
                   <el-row>
-                    <el-col v-if="products.length >= 1" :md="24">
+                    <el-col :md="18">
                       <div style="padding: 15px">
-                        <p><strong>Estos son los equipos seleccionados para el mantenimiento</strong></p>
-                        <el-row class="container-card" :gutter="15">
-                          <el-col :md="8" v-for="product_user in products">
-                            <el-card class="box-card">
-                              <div slot="header" class="clearfix">
-                                <span><b>{{ product_user.product.name }}</b></span>
+                        <p><strong>Comentarios del cliente</strong></p>
+                        <div v-if="comments.length <= 0" style="padding: 15px">
+                          <el-alert
+                            title="El cliente aún no realiza comentarios sobre el mantenimiento"
+                            type="info"
+                            center
+                            show-icon>
+                          </el-alert>
+                        </div>
+                        <div v-else style="padding: 15px 0">
+                          <el-timeline>
+                            <el-timeline-item
+                              :timestamp="$convertDateToHuman(comment.created_at)" color="#0b7c79" placement="top" v-for="comment in comments">
+                              <div v-if="comment.check_revision">
+                                <el-alert
+                                  title="El cliente solicito una revisión de este mantenimeinto"
+                                  type="error"
+                                  center
+                                  show-icon>
+                                </el-alert>
                               </div>
-                              <p style="color: #7F828B; font-size: 14px">Número de serie</p>
-                              <small>{{ product_user.serial_number }}</small>
-                              <br><br>
-                              <p style="color: #7F828B; font-size: 14px">Última fecha de mantenimiento</p>
-                              <b>{{ $convertDateToHuman(product_user.last_service) }}</b>
-                              <br><br>
-                              <p>Fecha de mantenimiento proxima</p>
-                              <b style="color: #5d3ce7">{{ $convertDateToHuman(product_user.next_service) }}</b>
-                              <br>
-                              <el-checkbox-group v-model="form.product_user_ids" style="text-align: right; padding: 15px">
-                                <el-checkbox :label="product_user.product.id" disabled>Seleccionar</el-checkbox>
-                              </el-checkbox-group>
-                            </el-card>
-                          </el-col>
-                        </el-row>
+                              <el-card>
+                                <h4>Comentario de cliente</h4>
+                                <p>{{ comment.description }}</p>
+                              </el-card>
+                            </el-timeline-item>
+                          </el-timeline>
+                        </div>
                       </div>
                     </el-col>
                   </el-row>
@@ -159,7 +165,7 @@
                         <p>Método - {{ report.method }}</p>
                       </div>
                       <div style="text-align: right">
-                        <el-button type="primary" @click="$router.push('/services/'+$route.params.id+'/reports/'+report.id)">Actualizar orden de servicio</el-button>
+                        <el-button type="primary" @click="$router.push('/services/'+$route.params.service_id+'/reports/'+report.id)">Actualizar orden de servicio</el-button>
                       </div>
                     </el-col>
                   </el-row>
@@ -170,6 +176,39 @@
         </el-col>
       </el-row>
     </TableGeneral>
+
+    <el-row>
+      <el-col :md="24">
+        <el-row>
+          <el-col v-if="products.length >= 1" :md="24">
+            <div style="padding: 15px">
+              <p><strong>Estos son los equipos seleccionados para el mantenimiento</strong></p>
+              <el-row class="container-card" :gutter="15">
+                <el-col :md="8" v-for="product_user in products">
+                  <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                      <span><b>{{ product_user.product.name }}</b></span>
+                    </div>
+                    <p style="color: #7F828B; font-size: 14px">Número de serie</p>
+                    <small>{{ product_user.serial_number }}</small>
+                    <br><br>
+                    <p style="color: #7F828B; font-size: 14px">Última fecha de mantenimiento</p>
+                    <b>{{ $convertDateToHuman(product_user.last_service) }}</b>
+                    <br><br>
+                    <p>Fecha de mantenimiento proxima</p>
+                    <b style="color: #5d3ce7">{{ $convertDateToHuman(product_user.next_service) }}</b>
+                    <br>
+                    <el-checkbox-group v-model="form.product_user_ids" style="text-align: right; padding: 15px">
+                      <el-checkbox :label="product_user.product.id" disabled>Seleccionar</el-checkbox>
+                    </el-checkbox-group>
+                  </el-card>
+                </el-col>
+              </el-row>
+            </div>
+          </el-col>
+        </el-row>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -206,8 +245,8 @@
 </style>
 
 <script>
-  import TitleSection from "../../components/TitleSection/TitleSection";
-  import TableGeneral from "../../components/tables/TableGeneral";
+  import TitleSection from "../../../components/TitleSection/TitleSection";
+  import TableGeneral from "../../../components/tables/TableGeneral";
   import _ from 'lodash';
   import moment from "moment";
 
@@ -246,6 +285,7 @@
         techs: [],
         products: [],
         reports: [],
+        comments: [],
         clientHaveProducts: false,
         form: {
           product_user_ids: [],
@@ -264,7 +304,7 @@
     methods: {
       async UpdateService() {
         this.form.tentative_date = moment(this.form.tentative_date).locale('es-mx').format('Y-M-D H:mm');
-        await this.$axios.$patch(process.env.URL_RA_BACKEND + 'services/' + this.$route.params.id, this.form);
+        await this.$axios.$patch(process.env.URL_RA_BACKEND + 'services/' + this.$route.params.service_id, this.form);
         this.$notify({
           title: 'Servicio actualizado',
           message: 'Servicio actualizado correctamente.',
@@ -278,10 +318,11 @@
         this.techs = techs.data.rows;
       },
       async getService() {
-        let service = await this.$axios.$get(process.env.URL_RA_BACKEND + 'services/' + this.$route.params.id)
+        let service = await this.$axios.$get(process.env.URL_RA_BACKEND + 'services/' + this.$route.params.service_id)
         let products = await this.$axios.$get(process.env.URL_RA_BACKEND + 'clients/'+service.data.service.client_id+'/product-relation?limit=200');
         this.products = products.data.rows;
         this.reports = service.data.service.reports;
+        this.comments = service.data.service.comments;
         this.form.client_id = service.data.service.client_id;
         this.form.technical_id = service.data.service.technical_id;
         this.form.tentative_date = service.data.service.tentative_date;
