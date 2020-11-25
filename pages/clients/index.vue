@@ -235,8 +235,8 @@
         });
       }
     },
-    mounted() {
-      this.init();
+    async fetch() {
+      await this.init();
     }
   }
 </script>

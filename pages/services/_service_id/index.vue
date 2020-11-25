@@ -46,7 +46,7 @@
                         </el-date-picker>
                       </el-form-item>
                     </el-col>
-                    <el-col :md="8">
+                    <el-col :md="6">
                       <el-form-item label="Tipo de mantenimiento">
                         <el-select v-model="form.activity" placeholder="Selecciona el tipo de mantenimiento">
                           <el-option label="Mantenimiento correctivo" value="corrective"></el-option>
@@ -54,7 +54,7 @@
                         </el-select>
                       </el-form-item>
                     </el-col>
-                    <el-col :md="8">
+                    <el-col :md="6">
                       <el-form-item label="Tipo de servicio">
                         <el-select
                           v-model="form.type"
@@ -65,16 +65,21 @@
                         </el-select>
                       </el-form-item>
                     </el-col>
-                    <el-col :md="8" v-if="form.type === 'face-to-face'">
+                    <el-col :md="6" v-if="form.type === 'face-to-face'">
                       <el-form-item label="Distancia en kilometros">
                         <el-input-number v-model="form.kms" :min="0" :max="1000" @change="UpdateService"></el-input-number>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="6" v-if="form.type === 'face-to-face'">
+                      <el-form-item label="Rendimiento">
+                        <el-input-number v-model="form.performance" :min="0" :max="1000" @change="UpdateService"></el-input-number>
                       </el-form-item>
                     </el-col>
                   </el-row>
                   <el-row>
                     <el-col :md="18">
                       <div style="padding: 15px">
-                        <p><strong>Comentarios del cliente</strong></p>
+                        <p><strong>Comentarios</strong></p>
                         <div v-if="comments.length <= 0" style="padding: 15px">
                           <el-alert
                             title="El cliente aún no realiza comentarios sobre el mantenimiento"
@@ -95,9 +100,14 @@
                                   show-icon>
                                 </el-alert>
                               </div>
-                              <el-card>
+                              <div style="padding-top: 10px">
                                 <h4>Comentario de cliente</h4>
-                                <p>{{ comment.description }}</p>
+                              </div>
+                              <el-card>
+                                <div class="comment-container">
+                                  <p>{{ comment.description }}</p>
+                                  <el-switch class="switch-comment" @change="ChangeStatusComment(comment)" v-model="comment.check_revision" v-if="$currentRole(['admin'])"></el-switch>
+                                </div>
                               </el-card>
                             </el-timeline-item>
                           </el-timeline>
@@ -137,32 +147,16 @@
                   <p v-if="report.description">{{ report.description }}</p>
                   <p v-else>Aún no hay descripción</p>
                 </div>
-                <b>Costos asociados a la orden de servicio</b>
-                <div class="container-costs" v-if="report.costs.length >= 1">
-                  <el-row class="header" :gutter="15">
-                    <el-col :md="16">Descripción</el-col>
-                    <el-col :md="8">Costo</el-col>
-                  </el-row>
-                  <el-row :gutter="15">
-                    <el-col :md="16">
-
-                    </el-col>
-                    <el-col :md="8">
-
-                    </el-col>
-                  </el-row>
-                </div>
-                <p v-else>Aún no hay costos asociados</p>
               </el-col>
               <el-col :md="12">
                 <div class="detail-service">
                   <el-row>
                     <el-col :md="24">
-                      <div style="padding: 20px 0px">
-                        <b>Forma de uso encontrada</b>
-                        <p>Dilución - {{ report.dilution }}</p>
-                        <p>Frecuencía - {{ report.frequency }}</p>
-                        <p>Método - {{ report.method }}</p>
+                      <div class="progress-element">
+                        <b>Progreso del servicio</b>
+                        <div class="max-element">
+                          <el-progress :percentage="report.progress"></el-progress>
+                        </div>
                       </div>
                       <div style="text-align: right">
                         <el-button type="primary" @click="$router.push('/services/'+$route.params.service_id+'/reports/'+report.id)">Actualizar orden de servicio</el-button>
@@ -213,6 +207,18 @@
 </template>
 
 <style lang="scss">
+  .comment-container{
+    position: relative;
+    > p{
+      padding-right: 100px
+    }
+    .switch-comment{
+      position: absolute;
+      top: 0px;
+      right: 15px;
+    }
+  }
+
   .el-select{
     width: 100%;
   }
@@ -231,6 +237,12 @@
     }
     .detail-service{
       padding: 10px;
+      .progress-element{
+        padding: 20px 0;
+        .max-element{
+          max-width: 250px;
+        }
+      }
     }
     .el-card{
       margin-top: 15px;
@@ -294,7 +306,8 @@
           tentative_date: "",
           type: "",
           kms: "",
-          activity: ""
+          activity: "",
+          performance: ""
         },
         rules: {
 
@@ -302,6 +315,9 @@
       }
     },
     methods: {
+      async ChangeStatusComment(comment){
+        await this.$axios.$patch(process.env.URL_RA_BACKEND + 'services/reviews/'+ comment.id, comment);
+      },
       async UpdateService() {
         this.form.tentative_date = moment(this.form.tentative_date).locale('es-mx').format('Y-M-D H:mm');
         await this.$axios.$patch(process.env.URL_RA_BACKEND + 'services/' + this.$route.params.service_id, this.form);
@@ -319,7 +335,7 @@
       },
       async getService() {
         let service = await this.$axios.$get(process.env.URL_RA_BACKEND + 'services/' + this.$route.params.service_id)
-        let products = await this.$axios.$get(process.env.URL_RA_BACKEND + 'clients/'+service.data.service.client_id+'/product-relation?limit=200');
+        let products = await this.$axios.$get(process.env.URL_RA_BACKEND + 'clients/'+ service.data.service.client_id + '/product-relation?limit=200');
         this.products = products.data.rows;
         this.reports = service.data.service.reports;
         this.comments = service.data.service.comments;
@@ -328,15 +344,16 @@
         this.form.tentative_date = service.data.service.tentative_date;
         this.form.type = service.data.service.type;
         this.form.kms = service.data.service.kms;
+        this.form.performance = service.data.service.performance;
         this.form.activity = service.data.service.activity;
         this.form.product_user_ids = _.map(service.data.service.reports, function (report) {
           return report.product_user.product.id;
         })
       }
     },
-    mounted() {
-      this.init();
-      this.getService();
+    async fetch() {
+      await this.init();
+      await this.getService();
     }
   }
 </script>

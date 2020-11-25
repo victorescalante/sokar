@@ -4,7 +4,7 @@
       <el-row>
         <el-col :md="24">
           <el-card>
-            <el-row>
+            <el-row v-loading="loading">
               <el-col :md="24" style="padding-left: 10px">
                 <h3>Visita de mantenimiento</h3>
               </el-col>
@@ -45,7 +45,7 @@
                         </el-date-picker>
                       </el-form-item>
                     </el-col>
-                    <el-col :md="8">
+                    <el-col :md="6">
                       <el-form-item label="Tipo de mantenimiento">
                         <el-select v-model="form.activity" placeholder="Selecciona el tipo de mantenimiento">
                           <el-option label="Mantenimiento correctivo" value="corrective"></el-option>
@@ -53,7 +53,7 @@
                         </el-select>
                       </el-form-item>
                     </el-col>
-                    <el-col :md="8">
+                    <el-col :md="6">
                       <el-form-item label="Tipo de servicio">
                         <el-select v-model="form.type" @change="form.kms = 0" placeholder="Selecciona el tipo de servicio">
                           <el-option label="Remoto" value="remote"></el-option>
@@ -61,9 +61,14 @@
                         </el-select>
                       </el-form-item>
                     </el-col>
-                    <el-col :md="8" v-if="form.type === 'face-to-face'">
+                    <el-col :md="6" v-if="form.type === 'face-to-face'">
                       <el-form-item label="Distancia en kilometros">
                         <el-input-number v-model="form.kms" :min="0" :max="1000"></el-input-number>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="6" v-if="form.type === 'face-to-face'">
+                      <el-form-item label="Rendimiento">
+                        <el-input-number v-model="form.performance" :min="0" :max="1000"></el-input-number>
                       </el-form-item>
                     </el-col>
                   </el-row>
@@ -188,6 +193,7 @@
         this.$refs[formName].resetFields();
       },
       submitForm(formName) {
+        this.loading = true;
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.form.tentative_date = moment(this.form.tentative_date).locale('es-mx').format('Y-M-D H:mm');
@@ -198,15 +204,17 @@
                   message: 'El servicio fue creado correctamente',
                   type: 'success'
                 });
+                this.loading = false;
                 this.$router.push('/services/'+response.data.data.id);
               }).catch(error => {
+              this.loading = false;
               this.$notify.error({
                 title: 'Error',
                 message: 'El servicio no ha posido ser creado'
               });
             });
-
           } else {
+            this.loading = false;
             return false;
           }
         });
@@ -214,6 +222,7 @@
     },
     data(){
       return {
+        loading: false,
         isTechUser: false,
         clients: [],
         techs: [],
@@ -226,6 +235,7 @@
           tentative_date: "",
           type: "face-to-face",
           kms: 0,
+          performance: 0,
           activity: "corrective"
         },
         rules: {

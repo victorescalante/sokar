@@ -12,7 +12,7 @@
       </el-col>
       <el-col :xs="12" :md="12">
         <div style="text-align: right">
-          <p>Revisar fecha</p>
+          <p>Selecciona un día de la semana</p>
           <br>
           <el-date-picker
             format="d/M/yyyy"
@@ -111,9 +111,14 @@
               <el-input type="textarea" v-model="form.description"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :md="10" v-if="form.type === 'face-to-face'">
+          <el-col :md="12" v-if="form.type === 'face-to-face'">
             <el-form-item label="Distancia en kilometros">
               <el-input-number v-model="form.kms" :min="0" :max="1000"></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" v-if="form.type === 'face-to-face'">
+            <el-form-item label="Rendimiento">
+              <el-input-number v-model="form.performance" :min="0" :max="1000"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -164,6 +169,7 @@
           type: 'remote',
           activity: "develop-project",
           kms: 0,
+          performance: 0,
           client_id: '',
           status: "open",
           date: ''
@@ -225,6 +231,7 @@
                   type: 'remote',
                   activity: "develop-project",
                   kms: 0,
+                  performance: 0,
                   client_id: '',
                   status: "open",
                   date: ''
@@ -261,6 +268,7 @@
                   type: 'remote',
                   activity: "develop-project",
                   kms: 0,
+                  performance: 0,
                   client_id: '',
                   status: "open",
                   date: ''

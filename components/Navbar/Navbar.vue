@@ -58,7 +58,7 @@
         </nuxt-link>
 
         <nuxt-link to="/read" v-if="$currentRole(['tecnico', 'admin'])">
-          <el-menu-item index="7" @click="onClickButton">
+          <el-menu-item index="8" @click="onClickButton">
             <i class="el-icon-camera"></i>
             <span>Leer QR</span>
           </el-menu-item>

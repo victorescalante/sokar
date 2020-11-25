@@ -2,7 +2,7 @@
   <div class="report">
     <p v-if="$fetchState.pending" class="primary-color">Cargando datos del reporte ...</p>
     <TableGeneral v-else title="Reporte de actividades" color="purple">
-      <el-row>
+      <el-row v-loading="loading">
         <el-col :md="24">
           <el-card>
             <p>Este es el reporte detallado para el producto <b>{{ report.product_user.product.name }}</b>
@@ -191,6 +191,7 @@
     },
     data(){
       return {
+        loading: false,
         notUpdate: false,
         catalog_repairs: [],
         report:{},
@@ -263,6 +264,7 @@
         })
       },
       submitForm(formName) {
+        this.loading = true;
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$axios.patch(process.env.URL_RA_BACKEND + 'services/'+this.$route.params.service_id+'/reports/'+this.$route.params.id, this.report)
@@ -273,14 +275,17 @@
                   type: 'success'
                 });
                 this.report = response.data.data.report;
+                this.loading = false;
               }).catch(error => {
               this.$notify.error({
                 title: 'Error',
                 message: 'El reporte no ha podido ser actualizado'
               });
+              this.loading = false;
             });
 
           } else {
+            this.loading = false;
             return false;
           }
         });

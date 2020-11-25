@@ -4,54 +4,117 @@
         <el-col :md="24" class="title-home">
           <h1>Hola, {{ $auth.$state.user.name }}</h1>
         </el-col>
-        <el-col :md="8">
-          <el-card class="box-card">
+        <!-- Start check services -->
+        <el-col :md="24">
+          <el-card class="box-card box-card-dashboard">
             <div slot="header" class="clearfix">
-              <span>Enlaces importantes</span>
+              <span>Servicios que han solicitado revisión</span>
             </div>
-            <el-link type="primary" href="https://dikeninternational.com/mex/universidad-diken-online/" target="_blank">Universidad Diken</el-link>
-            <el-divider></el-divider>
-            <el-link type="primary" href="https://www.dikeninternational.com/bigdata/signin.php" target="_blank">Big data</el-link>
-            <el-divider></el-divider>
-            <el-link type="primary" href="https://www.dikeninternational.com/auditorias/" target="_blank">Auditoría</el-link>
+            <el-row style="max-height: 350px; overflow-y: scroll">
+              <el-col :sm="24">
+                <el-table
+                  empty-text="Ningún servicio reportado"
+                  :data="reviews"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="service_id"
+                    label="#"
+                    width="100px"
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    prop="client_business"
+                    label="Cliente">
+                  </el-table-column>
+                  <el-table-column
+                    prop="technical_name"
+                    label="Tecnico">
+                  </el-table-column>
+                  <el-table-column
+                    label="Fecha de revisión">
+                    <template slot-scope="scope">
+                      <p>{{ $convertDateToHuman(scope.row.created_at) }}</p>
+                    </template>
+                  </el-table-column>
+                  <el-table-column>
+                    <template slot-scope="scope">
+                      <el-button size="small" @click="$router.push('services/'+ scope.row.service_id)">Revisar servicio</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-col>
+            </el-row>
           </el-card>
         </el-col>
-      </el-row>
-      <el-row>
+        <!-- End check services -->
+        <el-divider></el-divider>
+        <!-- Start check services -->
         <el-col :md="24">
-          <div style="padding: 25px 15px;">
+          <el-card class="box-card box-card-dashboard">
+            <div slot="header" class="clearfix">
+              <span>Equipos que faltan por realizar mantenimiento</span>
+            </div>
+            <el-row style="max-height: 350px; overflow-y: scroll">
+              <el-col :sm="24">
+                <el-table
+                  empty-text="Ningún equipo por realizar servicio"
+                  :data="product_next_service"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="client_business_name"
+                    label="Cliente">
+                  </el-table-column>
+                  <el-table-column
+                    prop="product_name"
+                    label="Producto">
+                  </el-table-column>
+                  <el-table-column
+                    label="Fecha de servicio">
+                    <template slot-scope="scope">
+                      <p>{{ $convertDateToHuman(scope.row.product_next_service) }}</p>
+                    </template>
+                  </el-table-column>
+                  <el-table-column>
+                    <template slot-scope="scope">
+                      <el-button size="small" @click="$router.push('clients/'+ scope.row.client_id)">Revisar producto</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-col>
+            </el-row>
+          </el-card>
+        </el-col>
+        <!-- End check services -->
+      </el-row>
+      <el-row v-loading="loading" element-loading-text="Espera un momento...">
+        <el-col :md="24">
+          <div style="padding: 50px 15px;">
             <h3 style="color: #0767C6">Reporte de servicios</h3>
+            <br>
             <p>Reporte de servicios de la fecha {{ $convertDate(params.service_begin) }} a {{ $convertDate(params.service_end) }}</p>
-            <el-row style="padding: 20px 0" :gutter="15">
-              <el-col :md="6">
-                <el-card class="box-card card-info-dash">
-                  <div slot="header" class="clearfix">
-                    <span>Servicios pendientes</span>
-                  </div>
-                  <div class="number-center pending">
-                    {{ pending_services }}
-                  </div>
-                </el-card>
+            <el-row>
+              <el-col :sm="6" class="content-resume">
+                <div class="count-resume">
+                  <div> <p>Pendientes:</p> </div>
+                  <div> {{pending_services}} </div>
+                </div>
               </el-col>
-              <el-col :md="6">
-                <el-card class="box-card card-info-dash">
-                  <div slot="header" class="clearfix">
-                    <span>Servicios terminados</span>
-                  </div>
-                  <div class="number-center ">
-                    {{ finished_services }}
-                  </div>
-                </el-card>
+              <el-col :sm="6" class="content-resume">
+                <div class="count-resume">
+                  <div> <p>En proceso:</p> </div>
+                  <div> {{in_process_services}} </div>
+                </div>
               </el-col>
-              <el-col :md="6">
-                <el-card class="box-card card-info-dash">
-                  <div slot="header" class="clearfix">
-                    <span>Servicios en progreso</span>
-                  </div>
-                  <div class="number-center in_process">
-                    {{ in_process_services }}
-                  </div>
-                </el-card>
+              <el-col :sm="6" class="content-resume">
+                <div class="count-resume">
+                  <div> <p>Terminados:</p> </div>
+                  <div> {{finished_services}} </div>
+                </div>
+              </el-col>
+              <el-col :sm="6" class="content-resume">
+                <div class="count-resume">
+                  <el-button type="success" @click="downloadReport" v-if="total >= 1">Descargar reporte</el-button>
+                </div>
               </el-col>
             </el-row>
             <el-row>
@@ -96,27 +159,6 @@
                   <div class="i-block">
                     <el-button type="primary" @click="refreshReport">Aplicar</el-button>
                   </div>
-                </div>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :md="12">
-                <div>
-                  <el-button type="success" @click="downloadReport" v-if="total >= 1">Descargar reporte</el-button>
-                </div>
-              </el-col>
-              <el-col :md="12">
-                <div style="text-align: right">
-                  <el-pagination
-                    v-if="total >= 1"
-                    class="custom-paginator"
-                    @size-change="handleSizeChange"
-                    @current-change="HandleCurrentPage"
-                    :page-sizes="[50, 100, 200]"
-                    :page-size="50"
-                    layout="sizes, prev, pager, next"
-                    :total="total">
-                  </el-pagination>
                 </div>
               </el-col>
             </el-row>
@@ -185,6 +227,22 @@
           </div>
         </el-col>
       </el-row>
+      <el-row>
+        <el-col :md="24">
+          <div style="text-align: right">
+            <el-pagination
+              v-if="total >= 1"
+              class="custom-paginator"
+              @size-change="handleSizeChange"
+              @current-change="HandleCurrentPage"
+              :page-sizes="[50, 100, 200]"
+              :page-size="50"
+              layout="sizes, prev, pager, next"
+              :total="total">
+            </el-pagination>
+          </div>
+        </el-col>
+      </el-row>
     </div>
 </template>
 
@@ -201,8 +259,11 @@
     },
     data(){
       return {
+        loading: false,
         activities: [],
         technicals: [],
+        reviews: [],
+        product_next_service: [],
         reportServices: [],
         pending_services: 0,
         finished_services: 0,
@@ -220,6 +281,7 @@
     },
     methods: {
       async downloadReport(){
+        this.loading = true;
         this.params.download = true;
         this.$axios.get(process.env.URL_RA_BACKEND+'report/services', {
           params: this.params,
@@ -237,8 +299,10 @@
           a.click();
           // 5. Release this temporary object url
           window.URL.revokeObjectURL(url);
+          this.loading = false;
         }).catch((error) => {
           console.log(error);
+          this.loading = false;
         });
       },
       async getReport(){
@@ -269,6 +333,16 @@
         this.params.page = page;
         await this.getReport();
       },
+      async getReviewsWithReport() {
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'services/reviews');
+        this.reviews = data.data.rows;
+        console.log(this.reviews)
+      },
+      async getProductNextService() {
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'products/next_service');
+        this.product_next_service = data.data.rows;
+        console.log(this.product_next_service)
+      },
       transformDate(date_moment){
         return date_moment.format('YYYY-MM-DD');
       },
@@ -281,29 +355,35 @@
       this.params.service_end = this.transformDate(moment(this.now).locale('es-mx').endOf('month'));
       await this.getReport();
       await this.getTechnicals();
+      await this.getReviewsWithReport();
+      await this.getProductNextService();
     }
   }
 </script>
 
 <style lang="scss">
 
-  .number-center{
-    display: block;
-    text-align: center;
-    color: black;
-    font-size: 25px;
-    &.pending{
-      color: purple;
-    }
-    &.in_process{
-      color: purple;
+  .box-card-dashboard{
+    span{
+      font-weight: bold;
     }
   }
 
-  .card-info-dash{
-    .el-card__header{
-      background: purple;
-      color: white;
+  .content-resume{
+    .count-resume{
+      padding: 15px 0;
+      div{
+        padding: 15px;
+        display: inline-block;
+        box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.75);
+        width: 30%;
+        text-align: center;
+      }
+      div:first-child{
+        background: #2186ea;
+        color: white;
+        width: 50%;
+      }
     }
   }
 

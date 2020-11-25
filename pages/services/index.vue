@@ -72,7 +72,7 @@
     methods: {
       async init() {
         let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'services');
-        this.data = data.data.services;
+        this.data = data.data.rows;
       },
       handleEdit(index, row){
         this.$router.push('/services/'+row.id);
