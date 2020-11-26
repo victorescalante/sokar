@@ -334,12 +334,12 @@
         await this.getReport();
       },
       async getReviewsWithReport() {
-        let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'services/reviews');
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'services/reviews?limit=200');
         this.reviews = data.data.rows;
         console.log(this.reviews)
       },
       async getProductNextService() {
-        let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'products/next_service');
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'products/next_service?limit=200');
         this.product_next_service = data.data.rows;
         console.log(this.product_next_service)
       },

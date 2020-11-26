@@ -8,6 +8,7 @@
 
       <div class="content">
         <el-table
+          v-loading="loading"
           :data="data"
           stripe
           style="width: 100%">
@@ -21,7 +22,7 @@
           </el-table-column>
           <el-table-column
             prop="created_at"
-            label="Creado">
+            label="Fecha de creación">
           </el-table-column>
           <el-table-column
             align="center"
@@ -36,10 +37,22 @@
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                @click="handleEdit(scope.$index, scope.row)">Editar</el-button>
+                @click="handleEdit(scope.$index, scope.row)">Revisar servicio</el-button>
             </template>
           </el-table-column>
         </el-table>
+        <div style="text-align: center">
+          <el-pagination
+            class="custom-paginator"
+            @size-change="handleSizeChange"
+            @current-change="HandleCurrentPage"
+            :page-sizes="[5, 10, 50, 100, 200]"
+            :page-size=parseInt(current_limit)
+            :current-page=parseInt(current_page)
+            layout="sizes, prev, pager, next"
+            :total="total_data">
+          </el-pagination>
+        </div>
       </div>
 
     </TableGeneral>
@@ -50,6 +63,7 @@
   import TableGeneral from "../../components/tables/TableGeneral";
 
   export default {
+    watchQuery: true,
     layout: 'dashboard',
     middleware: ['auth'],
     transition: {
@@ -66,14 +80,12 @@
     },
     data(){
       return {
-        data: []
+        data: [],
+        total_data: 0,
+        loading: false
       }
     },
     methods: {
-      async init() {
-        let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'services');
-        this.data = data.data.rows;
-      },
       handleEdit(index, row){
         this.$router.push('/services/'+row.id);
       },
@@ -88,10 +100,61 @@
           return 'warning';
         }
         return 'success'
+      },
+      async handleSizeChange(size) {
+        this.current_limit = size;
+        await this.$router.replace({
+          query: {
+            page: this.current_page,
+            limit: size
+          }
+        });
+        await this.getData();
+      },
+      async HandleCurrentPage(page){
+        this.current_page = page;
+        await this.$router.replace({
+          query: {
+            page: page,
+            limit: this.current_limit
+          }
+        });
+        await this.getData();
+      },
+      async getData(){
+        this.loading = true;
+        let data = await this.$axios.$get(process.env.URL_RA_BACKEND+'services', {
+          params: {
+            page: this.current_page,
+            limit: this.current_limit
+          }
+        });
+        this.data = data.data.rows;
+        this.total_data = data.data.total;
+        this.loading = false;
       }
     },
-    mounted() {
-      this.init();
+    asyncData({route, params}) {
+      let current_page;
+      let current_limit;
+
+      if (route.query.page === undefined){
+         current_page = 1;
+      }else{
+         current_page = route.query.page;
+      }
+
+      if (route.query.limit === undefined){
+         current_limit = 50;
+      }else{
+         current_limit = route.query.limit;
+      }
+
+      return { current_limit, current_page }
+
+    },
+    async fetch(){
+      await this.getData();
     }
   }
 </script>
