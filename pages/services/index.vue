@@ -82,7 +82,9 @@
       return {
         data: [],
         total_data: 0,
-        loading: false
+        loading: false,
+        current_page: 1,
+        current_limit: 50
       }
     },
     methods: {
@@ -120,6 +122,7 @@
           }
         });
         this.getData();
+        this.current_page = page;
       },
       async getData(){
         this.loading = true;
@@ -129,6 +132,7 @@
             limit: this.current_limit
           }
         });
+        console.log(this.current_page, this.current_limit)
         this.data = data.data.rows;
         this.total_data = data.data.total;
         this.loading = false;
