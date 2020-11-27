@@ -101,25 +101,25 @@
         }
         return 'success'
       },
-      async handleSizeChange(size) {
+      handleSizeChange(size) {
         this.current_limit = size;
-        await this.$router.replace({
+        this.$router.replace({
           query: {
             page: this.current_page,
             limit: size
           }
         });
-        await this.getData();
+        this.getData();
       },
-      async HandleCurrentPage(page){
+      HandleCurrentPage(page){
         this.current_page = page;
-        await this.$router.replace({
+        this.$router.replace({
           query: {
             page: page,
             limit: this.current_limit
           }
         });
-        await this.getData();
+        this.getData();
       },
       async getData(){
         this.loading = true;
